@@ -29,7 +29,7 @@
     return null;
   }
 
- export default function Maps(props) {
+function Maps(props) {
     const { selectPosition } = props;
     const locationSelection = [selectPosition?.lat, selectPosition?.lon];
 
@@ -50,3 +50,5 @@
         </MapContainer> 
     )
  }
+
+ export default Maps;
