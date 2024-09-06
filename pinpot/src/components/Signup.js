@@ -2,7 +2,7 @@ import React from 'react';
 import Login, { Render } from 'react-login-page';
 import Logo from 'react-login-page/logo';
 
-function LoginForm() {
+function SignupForm() {
     return (
         <Login>
           <Render>
@@ -25,6 +25,9 @@ function LoginForm() {
                             <label>{fields.password}</label>
                         </div>
                         <div>
+                            <label>{fields.email}</label>
+                        </div>
+                        <div>
                             {buttons.submit}
                         </div>
                     </div>
@@ -36,10 +39,11 @@ function LoginForm() {
             <Logo />
           </Login.Block>
           <Login.Block keyname="title" tagName="span">
-            Login to PinPot
+            Signup for PinPot
           </Login.Block>
           <Login.Input keyname="username" placeholder="Username" />
           <Login.Input keyname="password" placeholder="Password" />
+          <Login.Input keyname="email" placeholder="Email" />
           <Login.Button keyname="submit" type="submit">
             Submit
           </Login.Button>
@@ -47,4 +51,4 @@ function LoginForm() {
       );
 }
 
-export default LoginForm;
+export default SignupForm;

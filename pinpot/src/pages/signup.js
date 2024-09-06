@@ -1,18 +1,18 @@
-// Filename - signin.js
+// Filename - signup.js
 import React from 'react';
 import Navbar from '../components/Navbar';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import env from 'react-dotenv';
-import LoginButton from '../components/Login';
+import SignupForm from '../components/Signup';
 
-function Signin() {
+function Signup() {
 
   return (
     <GoogleOAuthProvider clientId={env.OAUTH_CLIENT_ID}>
       <Navbar></Navbar>
-      <LoginButton />
+      <SignupForm />
     </GoogleOAuthProvider>
   );
 }
 
-export default Signin;
+export default Signup;
