@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { faCheck, faTimes, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -9,8 +9,6 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{8,24}$/; // Requires on
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function SignupForm() {
-    const history = useNavigate();
-
     const userRef = useRef();
     const errRef = useRef();
 
@@ -66,9 +64,9 @@ function SignupForm() {
                     password: pwd,
                 })
                 .then(res => {
-                    if (res.data == 'exist') {
+                    if (res.data === 'exist') {
                         setErrMsg('Username or email already exists');
-                    } else if (res.data == 'notexist') {
+                    } else if (res.data === 'notexist') {
                         setSuccess(true);
                         setUser('');
                         setPwd('');

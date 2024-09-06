@@ -9,13 +9,16 @@ app.use(cors());
 app.get('/', cors(), (req, res) => {});
 
 app.post('/', async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     try {
-        const check = await collection.findOne({ email: email });
+        const check = await collection.findOne({ username: username });
 
         if (check) {
-            res.json('exist');
+            if (check.password === password) {
+                res.json('exist');
+            }
+            res.json('incorrect password');
         } else {
             res.json('notexist');
         }

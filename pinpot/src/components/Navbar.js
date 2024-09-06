@@ -1,8 +1,6 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import LoginButton from './Login';
-import { grey } from '@material-ui/core/colors';
 
 function MainNavbar() {
     return (

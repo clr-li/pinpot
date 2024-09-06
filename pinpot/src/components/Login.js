@@ -1,67 +1,110 @@
 // Filename - Login.js
-import React, { useState } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
-    const history = useNavigate();
+    const userRef = useRef();
+    const errRef = useRef();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUser] = useState('');
+    const [pwd, setPwd] = useState('');
+    const [errMsg, setErrMsg] = useState('');
+    const [success, setSuccess] = useState(false);
 
-    async function submitLogin(e) {
+    useEffect(() => {
+        userRef.current.focus();
+    }, []);
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [username, pwd]);
+
+    async function handleSubmit(e) {
         e.preventDefault();
 
         try {
             await axios
                 .post('http://localhost:8000/', {
-                    email,
-                    password,
+                    username: username,
+                    password: pwd,
                 })
                 .then(res => {
-                    if (res.data == 'exist') {
-                        history('/', { state: { id: email } });
-                    } else if (res.data == 'notexist') {
-                        alert("Username doesn't exist");
+                    if (res.data === 'exist') {
+                        setSuccess(true);
+                        setUser('');
+                        setPwd('');
+                    } else if (res.data === 'incorrect password') {
+                        setErrMsg('Incorrect password');
+                    } else if (res.data === 'notexist') {
+                        setErrMsg("Username doesn't exist");
                     }
                 })
                 .catch(e => {
-                    alert('wrong details');
-                    console.log(e);
+                    setErrMsg('Unable to login');
+                    setUser('');
+                    setPwd('');
                 });
         } catch (e) {
+            setErrMsg('Server Error');
+            setUser('');
+            setPwd('');
             console.log(e);
         }
     }
 
     return (
-        <div className="login">
-            <h1>Login</h1>
+        <>
+            {success ? (
+                <section>
+                    <h1>You are logged in!</h1>
+                    <br />
+                    <p>
+                        <a href="/">Go to Home</a>
+                    </p>
+                </section>
+            ) : (
+                <section>
+                    <p
+                        ref={errRef}
+                        className={errMsg ? 'errmsg' : 'offscreen'}
+                        aria-live="assertive"
+                    >
+                        {errMsg}
+                    </p>
+                    <h1>Sign In</h1>
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="username">Username:</label>
+                        <input
+                            type="text"
+                            id="username"
+                            ref={userRef}
+                            autoComplete="off"
+                            onChange={e => setUser(e.target.value)}
+                            value={username}
+                            required
+                        />
 
-            <form action="POST">
-                <input
-                    type="email"
-                    onChange={e => {
-                        setEmail(e.target.value);
-                    }}
-                    placeholder="Email"
-                />
-                <input
-                    type="password"
-                    onChange={e => {
-                        setPassword(e.target.value);
-                    }}
-                    placeholder="Password"
-                />
-                <input type="submit" onClick={submitLogin} />
-            </form>
-
-            <br />
-            <p>OR</p>
-            <br />
-
-            <Link to="/signup.html">Signup Page</Link>
-        </div>
+                        <label htmlFor="password">Password:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            onChange={e => setPwd(e.target.value)}
+                            value={pwd}
+                            required
+                        />
+                        <button>Sign In</button>
+                    </form>
+                    <p>
+                        Need an Account?
+                        <br />
+                        <span className="line">
+                            <a href="/signup.html">Sign Up Page</a>
+                        </span>
+                    </p>
+                </section>
+            )}
+        </>
     );
 }
 
