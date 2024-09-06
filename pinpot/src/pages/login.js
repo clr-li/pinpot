@@ -6,13 +6,12 @@ import env from 'react-dotenv';
 import LoginForm from '../components/Login';
 
 function Login() {
-
-  return (
-    <GoogleOAuthProvider clientId={env.OAUTH_CLIENT_ID}>
-      <Navbar></Navbar>
-      <LoginForm />
-    </GoogleOAuthProvider>
-  );
+    return (
+        <GoogleOAuthProvider clientId={env.OAUTH_CLIENT_ID}>
+            <Navbar></Navbar>
+            <LoginForm />
+        </GoogleOAuthProvider>
+    );
 }
 
 export default Login;

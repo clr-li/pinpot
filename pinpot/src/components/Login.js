@@ -1,50 +1,68 @@
-import React from 'react';
-import Login, { Render } from 'react-login-page';
-import Logo from 'react-login-page/logo';
+// Filename - Login.js
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 
 function LoginForm() {
+    const history = useNavigate();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    async function submit(e) {
+        e.preventDefault();
+
+        try {
+            await axios
+                .post('http://localhost:8000/', {
+                    email,
+                    password,
+                })
+                .then(res => {
+                    if (res.data == 'exist') {
+                        history('/', { state: { id: email } });
+                    } else if (res.data == 'notexist') {
+                        alert('User have not sign up');
+                    }
+                })
+                .catch(e => {
+                    alert('wrong details');
+                    console.log(e);
+                });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     return (
-        <Login>
-          <Render>
-            {({ fields, buttons, blocks, $$index }) => {
-              return (
-                <div style={{ display: "flex", "justify-content": "center" }}>
-                    <div style={{ display: "flex", 
-                    "flex-direction": "column", 
-                    "align-items": "center", 
-                    "background-color": "#fff", 
-                    padding: "20px",
-                    "border-radius": "8px", "box-shadow": "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-                        <header>
-                            {blocks.title}
-                        </header>
-                        <div>
-                            <label>{fields.username}</label>
-                        </div>
-                        <div>
-                            <label>{fields.password}</label>
-                        </div>
-                        <div>
-                            {buttons.submit}
-                        </div>
-                    </div>
-                </div>
-              );
-            }}
-          </Render>
-          <Login.Block keyname="logo" tagName="span">
-            <Logo />
-          </Login.Block>
-          <Login.Block keyname="title" tagName="span">
-            Login to PinPot
-          </Login.Block>
-          <Login.Input keyname="username" placeholder="Username" />
-          <Login.Input keyname="password" placeholder="Password" />
-          <Login.Button keyname="submit" type="submit">
-            Submit
-          </Login.Button>
-        </Login>
-      );
+        <div className="login">
+            <h1>Login</h1>
+
+            <form action="POST">
+                <input
+                    type="email"
+                    onChange={e => {
+                        setEmail(e.target.value);
+                    }}
+                    placeholder="Email"
+                />
+                <input
+                    type="password"
+                    onChange={e => {
+                        setPassword(e.target.value);
+                    }}
+                    placeholder="Password"
+                />
+                <input type="submit" onClick={submit} />
+            </form>
+
+            <br />
+            <p>OR</p>
+            <br />
+
+            <Link to="/signup.html">Signup Page</Link>
+        </div>
+    );
 }
 
 export default LoginForm;
