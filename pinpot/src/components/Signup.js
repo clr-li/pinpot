@@ -1,66 +1,223 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { faCheck, faTimes, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/; // Must start with lower or uppercase letter, must be 4-24 characters long
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{8,24}$/; // Requires one uppercase and lowercase letter, one special character, and must be 8-24 characters long
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function SignupForm() {
     const history = useNavigate();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const userRef = useRef();
+    const errRef = useRef();
 
-    async function submit(e) {
+    const [username, setUser] = useState('');
+    const [validUser, setValidUser] = useState(false);
+    const [userFocus, setUserFocus] = useState(false);
+
+    const [pwd, setPwd] = useState('');
+    const [validPwd, setValidPwd] = useState(false);
+    const [pwdFocus, setPwdFocus] = useState(false);
+
+    const [email, setEmail] = useState('');
+    const [validEmail, setValidEmail] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
+
+    const [errMsg, setErrMsg] = useState('');
+    const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        userRef.current.focus();
+    }, []);
+
+    useEffect(() => {
+        setValidUser(USER_REGEX.test(username));
+    }, [username]);
+
+    useEffect(() => {
+        setValidPwd(PWD_REGEX.test(pwd));
+    }, [pwd]);
+
+    useEffect(() => {
+        setValidEmail(EMAIL_REGEX.test(email));
+    }, [email]);
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [username, pwd]);
+
+    async function handleSubmit(e) {
         e.preventDefault();
+        const v1 = USER_REGEX.test(username);
+        const v2 = PWD_REGEX.test(pwd);
+        if (!v1 || !v2) {
+            setErrMsg('Invalid Entry');
+            return;
+        }
 
         try {
             await axios
                 .post('http://localhost:8000/signup', {
+                    username: username,
                     email,
-                    password,
+                    password: pwd,
                 })
                 .then(res => {
                     if (res.data == 'exist') {
-                        alert('User already exists');
+                        setErrMsg('Username or email already exists');
                     } else if (res.data == 'notexist') {
-                        history('/', { state: { id: email } });
+                        setSuccess(true);
+                        setUser('');
+                        setPwd('');
+                        setEmail('');
                     }
                 })
                 .catch(e => {
-                    alert('wrong details');
-                    console.log(e);
+                    setErrMsg('Failed to Register');
                 });
         } catch (e) {
-            console.log(e);
+            setErrMsg('Registration Failed');
         }
     }
 
     return (
-        <div className="login">
-            <h1>Signup</h1>
+        <>
+            {success ? (
+                <section>
+                    <h1>Success!</h1>
+                    <p>
+                        <a href="/login.html">Login Page</a>
+                    </p>
+                </section>
+            ) : (
+                <section>
+                    <p
+                        ref={errRef}
+                        className={errMsg ? 'errmsg' : 'offscreen'}
+                        aria-live="assertive"
+                    >
+                        {errMsg}
+                    </p>
+                    <h1>Register</h1>
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="username">
+                            Username:&nbsp;
+                            <FontAwesomeIcon
+                                icon={faCheck}
+                                className={validUser ? 'valid' : 'hide'}
+                            />
+                            <FontAwesomeIcon
+                                icon={faTimes}
+                                className={validUser || !username ? 'hide' : 'invalid'}
+                            />
+                        </label>
+                        <input
+                            type="text"
+                            id="username"
+                            ref={userRef}
+                            autoComplete="off"
+                            onChange={e => setUser(e.target.value)}
+                            value={username}
+                            required
+                            aria-invalid={validUser ? 'false' : 'true'}
+                            aria-describedby="uidnote"
+                            onFocus={() => setUserFocus(true)}
+                            onBlur={() => setUserFocus(false)}
+                        />
+                        <p
+                            id="uidnote"
+                            className={
+                                userFocus && username && !validUser ? 'instructions' : 'offscreen'
+                            }
+                        >
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                            &nbsp; 4 to 24 characters.
+                            <br />
+                            Must begin with a letter.
+                            <br />
+                            Letters, numbers, underscores, hyphens allowed.
+                        </p>
 
-            <form action="POST">
-                <input
-                    type="email"
-                    onChange={e => {
-                        setEmail(e.target.value);
-                    }}
-                    placeholder="Email"
-                />
-                <input
-                    type="password"
-                    onChange={e => {
-                        setPassword(e.target.value);
-                    }}
-                    placeholder="Password"
-                />
-                <input type="submit" onClick={submit} />
-            </form>
+                        <label htmlFor="password">
+                            Password:&nbsp;
+                            <FontAwesomeIcon
+                                icon={faCheck}
+                                className={validPwd ? 'valid' : 'hide'}
+                            />
+                            <FontAwesomeIcon
+                                icon={faTimes}
+                                className={validPwd || !pwd ? 'hide' : 'invalid'}
+                            />
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            onChange={e => setPwd(e.target.value)}
+                            value={pwd}
+                            required
+                            aria-invalid={validPwd ? 'false' : 'true'}
+                            aria-describedby="pwdnote"
+                            onFocus={() => setPwdFocus(true)}
+                            onBlur={() => setPwdFocus(false)}
+                        />
+                        <p
+                            id="pwdnote"
+                            className={pwdFocus && !validPwd ? 'instructions' : 'offscreen'}
+                        >
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                            &nbsp; 8 to 24 characters.
+                            <br />
+                            Must include uppercase and lowercase letters, a number and a special
+                            character.
+                            <br />
+                            Allowed special characters: <span aria-label="exclamation mark">
+                                !
+                            </span>{' '}
+                            <span aria-label="at symbol">@</span>{' '}
+                            <span aria-label="hashtag">#</span>{' '}
+                            <span aria-label="dollar sign">$</span>{' '}
+                            <span aria-label="percent">%</span>
+                        </p>
+                        <label htmlFor="email">
+                            Email:
+                            <FontAwesomeIcon
+                                icon={faCheck}
+                                className={validEmail ? 'valid' : 'hide'}
+                            />
+                            <FontAwesomeIcon
+                                icon={faTimes}
+                                className={validEmail || !email ? 'hide' : 'invalid'}
+                            />
+                        </label>
+                        <input
+                            type="text"
+                            id="email"
+                            onChange={e => setEmail(e.target.value)}
+                            value={email}
+                            required
+                            aria-invalid={validEmail ? 'false' : 'true'}
+                            aria-describedby="uidnote"
+                            onFocus={() => setEmailFocus(true)}
+                            onBlur={() => setEmailFocus(false)}
+                        />
 
-            <br />
-            <p>OR</p>
-            <br />
-
-            <Link to="/login.html">Login Page</Link>
-        </div>
+                        <button disabled={!validUser || !validPwd || !validEmail ? true : false}>
+                            Sign Up
+                        </button>
+                    </form>
+                    <p>
+                        Already registered?
+                        <br />
+                        <span className="line">
+                            <Link to="/login.html">Login Page</Link>
+                        </span>
+                    </p>
+                </section>
+            )}
+        </>
     );
 }
 

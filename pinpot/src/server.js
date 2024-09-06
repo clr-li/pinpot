@@ -25,15 +25,16 @@ app.post('/', async (req, res) => {
 });
 
 app.post('/signup', async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password, email } = req.body;
 
     const data = {
-        email: email,
+        username: username,
         password: password,
+        email: email,
     };
 
     try {
-        const check = await collection.findOne({ email: email });
+        const check = await collection.findOne({ username: username });
 
         if (check) {
             res.json('exist');
@@ -46,6 +47,4 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-app.listen(8000, () => {
-    console.log('port connected');
-});
+app.listen(8000, () => {});

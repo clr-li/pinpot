@@ -1,5 +1,5 @@
 // Filename - Login.js
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    async function submit(e) {
+    async function submitLogin(e) {
         e.preventDefault();
 
         try {
@@ -22,7 +22,7 @@ function LoginForm() {
                     if (res.data == 'exist') {
                         history('/', { state: { id: email } });
                     } else if (res.data == 'notexist') {
-                        alert('User have not sign up');
+                        alert("Username doesn't exist");
                     }
                 })
                 .catch(e => {
@@ -53,7 +53,7 @@ function LoginForm() {
                     }}
                     placeholder="Password"
                 />
-                <input type="submit" onClick={submit} />
+                <input type="submit" onClick={submitLogin} />
             </form>
 
             <br />

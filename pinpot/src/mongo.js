@@ -1,22 +1,24 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 const mongoPassword = process.env.MONGODB_PASSWORD;
-const uri = `mongodb+srv://pinpot:${mongoPassword}@pinpot.ctzlg.mongodb.net/?retryWrites=true&w=majority&appName=PinPot`;
+const uri = `mongodb+srv://pinpot:${mongoPassword}@pinpot.ctzlg.mongodb.net/pinpot?retryWrites=true&w=majority&appName=PinPot`;
 mongoose
     .connect(uri)
-    .then(() => {
-        console.log('mongodb connected');
-    })
+    .then(() => {})
     .catch(e => {
-        console.log('failed');
+        console.log('Connection error:', e);
     });
 
 const newSchema = new mongoose.Schema({
-    email: {
+    username: {
         type: String,
         required: true,
     },
     password: {
+        type: String,
+        required: true,
+    },
+    email: {
         type: String,
         required: true,
     },
