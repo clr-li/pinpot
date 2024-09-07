@@ -1,29 +1,37 @@
 .posts-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
 }
 
 .post-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
 }
 
 .post-img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
+    width: 100%;
     border-radius: 8px;
-    border: 1px solid #e0e0e0;
+    object-fit: cover;
 }
 
 .post-date {
-    margin-top: 0.1rem;
-    font-size: 0.875rem;
-    color: #666;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #555;
 }
 
 .post-img:hover {
     transform: scale(1.05);
+}
+
+.post-caption {
+    margin-top: 8px;
+    font-size: 1rem;
+    color: #333;
+    white-space: pre-wrap; /* Handle line breaks */
+    text-align: left;
 }

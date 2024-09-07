@@ -53,6 +53,7 @@ function MyPosts(props) {
                 <div key={index} className="post-container">
                     <img className="post-img" src={data.img} alt="a post" />
                     <div className="post-date">{formatDate(data.uploadDate)}</div>
+                    {data.text && <div className="post-caption">{data.text}</div>}
                 </div>
             ))}
         </div>

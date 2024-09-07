@@ -1,33 +1,56 @@
 // Filename: PostDetails.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PopupMessage from './PopupMessage';
 import '../styles/posts.css';
 import { postVisibility } from '../enum';
+import { getUserFromToken } from '../auth';
 
 function PostDetails(props) {
     const { postImage } = props;
+    const [user, setUser] = useState(null);
     const [visibility, setVisibility] = useState(postVisibility.PRIVATE);
-    const [takenDate, setTakenDate] = useState('');
+    const [takenDate, setTakenDate] = useState(new Date().toISOString().split('T')[0]); // Default to current date
     const [caption, setCaption] = useState('');
     const [message, setMessage] = useState(null);
+
+    useEffect(() => {
+        try {
+            const userInfo = getUserFromToken();
+            if (userInfo) {
+                setUser(userInfo);
+            }
+        } catch (error) {
+            console.log('Error getting user info:', error);
+        }
+    }, []);
 
     const handleSubmit = async e => {
         e.preventDefault();
 
+        if (!user) {
+            setMessage({ text: 'User not authenticated.', type: 'error' });
+            return;
+        }
+
+        const postData = {
+            uid: user.id, // Use the user ID from the token
+            postType: postImage.postType,
+            img: postImage.img,
+            location: postImage.location,
+            visibility,
+            takenDate: new Date(takenDate).toISOString(),
+        };
+
+        if (caption.trim()) {
+            postData.text = caption; // Only include caption if it's not empty
+        }
+
         try {
-            const response = await axios.post(`http://localhost:8000/upload-post/`, {
-                uid: postImage.uid,
-                postType: postImage.postType,
-                img: postImage.img,
-                text: caption,
-                location: postImage.location,
-                visibility: visibility,
-                takenDate: new Date(takenDate).toISOString(),
-            });
+            const response = await axios.post(`http://localhost:8000/upload-post/`, postData);
 
             if (response.status === 201) {
-                setMessage({ text: 'Posted!', type: 'success' });
+                setMessage({ text: 'Posted successfully!', type: 'success' });
             } else {
                 setMessage({ text: 'Failed to post.', type: 'error' });
             }
@@ -36,12 +59,17 @@ function PostDetails(props) {
         }
     };
 
+    // Ensure postImage is set before rendering the form
+    if (!postImage) {
+        return;
+    }
+
     return (
         <div className="post-settings">
             <h2>Post Details</h2>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="caption">Caption:</label>
+                    <label htmlFor="caption">Caption (Optional):</label>
                     <textarea
                         id="caption"
                         value={caption}
@@ -71,7 +99,7 @@ function PostDetails(props) {
                         onChange={e => setTakenDate(e.target.value)}
                     />
                 </div>
-                <button type="submit">Save Settings</button>
+                <button type="submit">Post</button>
             </form>
             {message && <PopupMessage message={message.text} type={message.type} />}
         </div>
