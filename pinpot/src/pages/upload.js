@@ -20,7 +20,7 @@ function Upload() {
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}
                     />
-                    <FileUploader></FileUploader>
+                    <FileUploader selectPosition={selectPosition}></FileUploader>
                 </div>
             </div>
         </React.StrictMode>

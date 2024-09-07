@@ -28,7 +28,7 @@ const postSchema = new mongoose.Schema(
             required: false,
         },
         location: {
-            type: Array,
+            type: Object,
             required: true,
         },
         visibility: {

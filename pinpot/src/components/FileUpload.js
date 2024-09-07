@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
 
-function FileUploader() {
+function FileUploader(props) {
     const [image, setImage] = useState('');
     const [user, setUser] = useState(null);
+    const { selectPosition } = props;
 
-    // Use useEffect to set user info only once when component mounts
     useEffect(() => {
         try {
             const userInfo = getUserFromToken();
@@ -14,7 +14,7 @@ function FileUploader() {
         } catch (error) {
             console.log('Error getting user info:', error);
         }
-    }, []); // Empty dependency array ensures this runs only once
+    }, []);
 
     async function convertToBase64(e) {
         let file = e.target.files[0];
@@ -40,7 +40,6 @@ function FileUploader() {
 
     function resizeBase64Image(base64Image, fileSize) {
         const targetSizeInKB = 75 * 1024;
-
         return new Promise(resolve => {
             const img = new Image();
             img.src = base64Image;
@@ -93,13 +92,17 @@ function FileUploader() {
             return;
         }
 
+        if (!selectPosition) {
+            alert('Please select the location of the image');
+        }
+
         try {
             const response = await axios.post('http://localhost:8000/upload-post', {
                 uid: user.id,
                 postType: 'image',
                 img: image,
                 text: '',
-                location: [51.505, -0.09],
+                location: selectPosition,
                 visibility: 'public',
                 takenDate: Date.now(),
             });
@@ -115,14 +118,12 @@ function FileUploader() {
     }
 
     return (
-        <div>
-            <div>
-                Upload image
-                <br />
-                <input type="file" accept="image/*" onChange={convertToBase64} />
-            </div>
-            <button onClick={uploadImage}>Upload</button>
+        <div className="file-uploader">
+            <h2>Upload Image</h2>
+            <br />
+            <input type="file" accept="image/*" onChange={convertToBase64} />
             {image && <img width={120} height={120} src={image} alt="Preview" />}
+            <button onClick={uploadImage}>Upload</button>
         </div>
     );
 }
