@@ -3,14 +3,14 @@ const collection = require('./mongo');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-require('dotenv').config(); // For environment variables like JWT secret
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-const JWT_SECRET = process.env.JWT_SECRET; // Use an environment variable for the secret
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Helper function to generate JWT
 function generateToken(user) {
@@ -69,7 +69,6 @@ function authenticateToken(req, res, next) {
     });
 }
 
-// Protected route example
 app.get('/protected', authenticateToken, (req, res) => {
     res.json('This is a protected route');
 });

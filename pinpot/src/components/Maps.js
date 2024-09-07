@@ -4,12 +4,14 @@ import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { fetchProtectedData } from '../auth';
+import { useNavigate } from 'react-router-dom';
 
+let permitted = true;
 try {
-    const result = await fetchProtectedData();
-    console.log(result);
+    let response = await fetchProtectedData();
+    console.log(response);
 } catch (error) {
-    console.log('failleddd', error);
+    permitted = false;
 }
 
 const icon = L.icon({
@@ -35,6 +37,13 @@ function ResetCenterView(props) {
 }
 
 function Maps(props) {
+    const history = useNavigate();
+
+    useEffect(() => {
+        if (!permitted) {
+            history('/login.html');
+        }
+    });
     const { selectPosition } = props;
     const locationSelection = [selectPosition?.lat, selectPosition?.lon];
 

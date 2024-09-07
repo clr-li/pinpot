@@ -30,6 +30,7 @@ function LoginForm() {
                 })
                 .then(res => {
                     if (res.status === 201) {
+                        localStorage.setItem('token', res.data.token);
                         setUser('');
                         setPwd('');
                         setSuccess(true);
