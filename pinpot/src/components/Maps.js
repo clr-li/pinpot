@@ -26,13 +26,13 @@ function ResetCenterView(props) {
                 animate: true,
             });
         }
-    });
+    }, [selectPosition, map]);
 
     return null;
 }
 
 function Maps(props) {
-    const { selectPosition, locations } = props;
+    const { selectPosition, locations, onMarkerClick } = props;
     const locationSelection = [selectPosition?.lat, selectPosition?.lon];
 
     return (
@@ -40,7 +40,14 @@ function Maps(props) {
             <TileLayer attribution="" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {locations &&
                 locations.map((loc, index) => (
-                    <Marker key={'marker-' + index} position={[loc.lat, loc.lon]} icon={locIcon}>
+                    <Marker
+                        key={'marker-' + index}
+                        position={[loc.lat, loc.lon]}
+                        icon={locIcon}
+                        eventHandlers={{
+                            click: () => onMarkerClick(loc),
+                        }}
+                    >
                         <Popup>{`Lat: ${loc.lat}, Lon: ${loc.lon}`}</Popup>
                     </Marker>
                 ))}

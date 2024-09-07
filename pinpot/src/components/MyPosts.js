@@ -41,9 +41,9 @@ function MyPosts(props) {
     }, [selectPosition]);
 
     return (
-        <div>
+        <div className="posts-grid">
             {posts.map((data, index) => (
-                <img key={index} width={120} height={120} src={data.img} alt="a post" />
+                <img key={index} className="post-img" src={data.img} alt="a post" />
             ))}
         </div>
     );

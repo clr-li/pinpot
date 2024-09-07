@@ -1,4 +1,4 @@
-// Filename - map.js
+// Filename - Map.js
 import React, { useState, useEffect } from 'react';
 import '../index.css';
 import Navbar from '../components/Navbar';
@@ -15,11 +15,11 @@ function Map() {
     const [user, setUser] = useState(null);
     const [posts, setPosts] = useState([]);
     const [locations, setLocations] = useState([]);
+    const [selectPosition, setSelectPosition] = useState(null);
     const history = useNavigate();
 
     useEffect(() => {
         async function fetchData() {
-            // TODO: Turn this into a component
             try {
                 const userInfo = getUserFromToken();
                 if (!userInfo) {
@@ -48,23 +48,30 @@ function Map() {
         }
 
         fetchData();
-    }, []);
+    }, [history]);
 
-    const [selectPosition, setSelectPosition] = useState(null);
+    const handleMarkerClick = location => {
+        setSelectPosition(location);
+    };
+
     return (
         <React.StrictMode>
-            <Navbar></Navbar>
+            <Navbar />
             <div className="half-half-containter">
-                <div style={{ width: '50vw' }}>
-                    <Maps selectPosition={selectPosition} locations={locations} />
+                <div style={{ width: '50vw', height: '100vh' }}>
+                    <Maps
+                        selectPosition={selectPosition}
+                        locations={locations}
+                        onMarkerClick={handleMarkerClick}
+                    />
                 </div>
-                <div style={{ width: '50vw' }}>
-                    <UserProfile></UserProfile>
+                <div style={{ width: '50vw', height: '100vh' }}>
+                    <UserProfile />
                     <SearchBox
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}
                     />
-                    <MyPosts selectPosition={selectPosition}></MyPosts>
+                    <MyPosts selectPosition={selectPosition} />
                 </div>
             </div>
         </React.StrictMode>
