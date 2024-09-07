@@ -41,7 +41,7 @@ function Posts() {
     return (
         <div>
             {posts.map(data => {
-                return <img width={100} height={100} src={data.img} />;
+                return <img width={120} height={120} src={data.img} />;
             })}
         </div>
     );

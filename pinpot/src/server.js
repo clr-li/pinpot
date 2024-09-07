@@ -101,7 +101,6 @@ app.post('/upload-post', async (req, res) => {
 // Get post by uid
 app.get('/get-post', async (req, res) => {
     const { uid } = req.query;
-    console.log(uid);
 
     try {
         await postsCol.find({ uid: uid }).then(data => {
