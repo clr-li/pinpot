@@ -4,6 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const postsCol = require('./db/posts');
+const followCol = require('./db/follower');
 const levenshtein = require('js-levenshtein');
 require('dotenv').config();
 
@@ -142,6 +143,31 @@ app.get('/search-users', async (req, res) => {
         res.send({ Status: 'success', data: closestUsers });
     } catch (e) {
         res.send({ Status: 'error', data: e });
+    }
+});
+
+app.post('/follow-user', async (req, res) => {
+    const { followedId, followerId } = req.body;
+
+    if (!followerId || !followedId) {
+        return res.status(400).send({ Status: 'error', data: 'User IDs are required.' });
+    }
+
+    try {
+        // Check if the user is already following the target user
+        const existingRelation = await followCol.findOne({ followerId, followedId: followedId });
+
+        if (existingRelation) {
+            return res.send({ Status: 'error', data: 'Already following this user.' });
+        }
+
+        // Create a new follow relationship
+        const newRelation = new followCol({ followerId, followedId: followedId });
+        await newRelation.save();
+
+        res.status(201).send({ Status: 'success', data: 'User followed successfully.' });
+    } catch (e) {
+        res.send({ Status: 'error', data: e.message });
     }
 });
 

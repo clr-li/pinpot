@@ -69,4 +69,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
-mongodb+srv://pinpot:<db_password>@cluster0.ctzlg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+Follower: user - the followed followed followed

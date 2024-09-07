@@ -26,9 +26,6 @@ function UserProfile() {
             {user ? (
                 <div>
                     <h1>Welcome, {user.username}</h1>
-                    <p>
-                        {user.id} {user.email}
-                    </p>
                 </div>
             ) : (
                 <p>Loading...</p>

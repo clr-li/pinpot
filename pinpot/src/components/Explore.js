@@ -1,11 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/explore.css'; // Include any styles you need
+import { useNavigate } from 'react-router-dom';
+import { getUserFromToken } from '../auth';
 
 function Explore() {
+    const [user, setUser] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [message, setMessage] = useState(null);
+    const history = useNavigate();
+
+    useEffect(() => {
+        try {
+            const userInfo = getUserFromToken();
+            setUser(userInfo);
+        } catch (error) {
+            history('/login.html');
+        }
+    }, []);
 
     const handleSearchChange = e => {
         setSearchTerm(e.target.value);
@@ -22,28 +35,26 @@ function Explore() {
             });
 
             if (response.status === 200) {
-                setSearchResults(response.data.data); // Adjust based on actual response structure
-                console.log('Search results:', response.data.data);
+                setSearchResults(response.data.data);
             } else {
                 setMessage({ text: 'Failed to fetch users.', type: 'error' });
-                console.log('Failed to fetch users');
             }
         } catch (error) {
             setMessage({ text: 'Error searching users.', type: 'error' });
-            console.log('Error searching users:', error);
         }
     };
 
-    const handleFollowUser = async userId => {
+    const handleFollowUser = async followedId => {
         try {
-            const response = await axios.post('http://localhost:8000/follow-user', {
-                userId,
+            const res = await axios.post('http://localhost:8000/follow-user', {
+                followerId: user.id,
+                followedId,
             });
 
-            if (response.status === 200) {
+            if (res.status === 201) {
                 setMessage({ text: 'Followed successfully!', type: 'success' });
             } else {
-                setMessage({ text: 'Failed to follow.', type: 'error' });
+                setMessage({ text: res.data.data, type: 'error' });
             }
         } catch (error) {
             setMessage({ text: 'Error following user.', type: 'error' });
