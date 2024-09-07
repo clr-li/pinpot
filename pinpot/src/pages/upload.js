@@ -12,10 +12,10 @@ function Upload() {
         <React.StrictMode>
             <Navbar></Navbar>
             <div className="half-half-containter">
-                <div style={{ width: '50vw' }}>
+                <div className="half-container">
                     <Maps selectPosition={selectPosition} />
                 </div>
-                <div style={{ width: '50vw' }}>
+                <div className="half-container">
                     <SearchBox
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}
