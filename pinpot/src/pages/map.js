@@ -9,11 +9,11 @@ import SearchBox from '../components/SearchBox';
 import Maps from '../components/Maps';
 import { fetchProtectedData } from '../auth';
 import { useNavigate } from 'react-router-dom';
+import UserProfile from '../components/UserData';
 
-let permitted = true;
+let permitted = true; // TODO: Turn this into a component
 try {
-    let response = await fetchProtectedData();
-    console.log(response);
+    await fetchProtectedData();
 } catch (error) {
     permitted = false;
 }
@@ -42,6 +42,7 @@ function Map() {
                     <Maps selectPosition={selectPosition} />
                 </div>
                 <div style={{ width: '50vw' }}>
+                    <UserProfile></UserProfile>
                     <SearchBox
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}

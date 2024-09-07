@@ -14,7 +14,9 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // Helper function to generate JWT
 function generateToken(user) {
-    return jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ id: user._id, username: user.username, email: user.email }, JWT_SECRET, {
+        expiresIn: '1h',
+    });
 }
 
 // Login route

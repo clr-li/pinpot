@@ -3,6 +3,7 @@ import Home from './pages/home';
 import Login from './pages/login';
 import Signup from './pages/signup';
 import Map from './pages/map';
+import Upload from './pages/upload';
 
 export const Routers = () => {
     return (
@@ -11,6 +12,7 @@ export const Routers = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/map.html" element={<Map />} />
                 <Route path="/signup.html" element={<Signup />} />
+                <Route path="/upload.html" element={<Upload />} />
                 <Route path="/login.html" element={<Login />} />
             </Routes>
         </Router>
