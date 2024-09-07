@@ -64,17 +64,14 @@ function SignupForm() {
                     password: pwd,
                 })
                 .then(res => {
-                    if (res.data === 'exist') {
-                        setErrMsg('Username or email already exists');
-                    } else if (res.data === 'notexist') {
-                        setSuccess(true);
+                    if (res.status === 201) {
                         setUser('');
                         setPwd('');
                         setEmail('');
+                        setSuccess(true);
+                    } else {
+                        setErrMsg(res.data);
                     }
-                })
-                .catch(e => {
-                    setErrMsg('Failed to Register');
                 });
         } catch (e) {
             setErrMsg('Registration Failed');

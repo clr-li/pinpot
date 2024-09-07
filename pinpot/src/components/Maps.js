@@ -3,6 +3,14 @@ import React, { useEffect } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { fetchProtectedData } from '../auth';
+
+try {
+    const result = await fetchProtectedData();
+    console.log(result);
+} catch (error) {
+    console.log('failleddd', error);
+}
 
 const icon = L.icon({
     iconUrl: './marker.png',

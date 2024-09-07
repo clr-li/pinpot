@@ -1,7 +1,6 @@
 // Filename - Login.js
 import { useRef, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
     const userRef = useRef();
@@ -25,19 +24,17 @@ function LoginForm() {
 
         try {
             await axios
-                .post('http://localhost:8000/', {
+                .post('http://localhost:8000/login', {
                     username: username,
                     password: pwd,
                 })
                 .then(res => {
-                    if (res.data === 'exist') {
-                        setSuccess(true);
+                    if (res.status === 201) {
                         setUser('');
                         setPwd('');
-                    } else if (res.data === 'incorrect password') {
-                        setErrMsg('Incorrect password');
-                    } else if (res.data === 'notexist') {
-                        setErrMsg("Username doesn't exist");
+                        setSuccess(true);
+                    } else {
+                        setErrMsg(res.data);
                     }
                 })
                 .catch(e => {
@@ -46,10 +43,7 @@ function LoginForm() {
                     setPwd('');
                 });
         } catch (e) {
-            setErrMsg('Server Error');
-            setUser('');
-            setPwd('');
-            console.log(e);
+            setErrMsg(e.response.data);
         }
     }
 
@@ -72,7 +66,7 @@ function LoginForm() {
                     >
                         {errMsg}
                     </p>
-                    <h1>Sign In</h1>
+                    <h1>Login</h1>
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="username">Username:</label>
                         <input

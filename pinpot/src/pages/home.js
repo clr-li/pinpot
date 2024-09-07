@@ -15,9 +15,6 @@ function Home() {
     return (
         <GoogleOAuthProvider clientId={env.OAUTH_CLIENT_ID}>
             <Navbar></Navbar>
-            {/* <div className="homepage">
-                <h1>Hello {location.state.id} and welcome home</h1>
-            </div> */}
             <div
                 style={{
                     display: 'flex',

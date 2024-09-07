@@ -1,53 +1,79 @@
 const express = require('express');
 const collection = require('./mongo');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config(); // For environment variables like JWT secret
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.get('/', cors(), (req, res) => {});
+const JWT_SECRET = process.env.JWT_SECRET; // Use an environment variable for the secret
 
-app.post('/', async (req, res) => {
+// Helper function to generate JWT
+function generateToken(user) {
+    return jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
+}
+
+// Login route
+app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const check = await collection.findOne({ username: username });
+        const user = await collection.findOne({ username: username });
 
-        if (check) {
-            if (check.password === password) {
-                res.json('exist');
-            }
-            res.json('incorrect password');
+        if (user && (await bcrypt.compare(password, user.password))) {
+            const token = generateToken(user);
+            res.status(201).json({ token });
         } else {
-            res.json('notexist');
+            res.send('Invalid username or password');
         }
     } catch (e) {
-        res.json('fail');
+        res.send('Error occurred');
     }
 });
 
+// Signup route
 app.post('/signup', async (req, res) => {
     const { username, password, email } = req.body;
 
-    const data = {
-        username: username,
-        password: password,
-        email: email,
-    };
-
     try {
-        const check = await collection.findOne({ username: username });
+        const existingUser = await collection.findOne({ username: username });
 
-        if (check) {
-            res.json('exist');
+        if (existingUser) {
+            res.send('Username already taken');
         } else {
-            res.json('notexist');
-            await collection.insertMany([data]);
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const newUser = { username, password: hashedPassword, email };
+            await collection.insertMany([newUser]);
+            res.status(201).json('User created');
         }
     } catch (e) {
-        res.json('fail');
+        res.send('Error adding user');
     }
 });
 
-app.listen(8000, () => {});
+// Middleware to authenticate JWT
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401);
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+}
+
+// Protected route example
+app.get('/protected', authenticateToken, (req, res) => {
+    res.json('This is a protected route');
+});
+
+app.listen(8000, () => {
+    console.log('Server running on port 8000');
+});
