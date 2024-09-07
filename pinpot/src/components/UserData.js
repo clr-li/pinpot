@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { getUserFromToken } from '../auth';
+import { useNavigate } from 'react-router-dom';
 
 function UserProfile() {
     const [user, setUser] = useState(null);
     const [error, setError] = useState('');
+    const history = useNavigate();
 
     useEffect(() => {
         try {
             const userInfo = getUserFromToken();
             setUser(userInfo);
         } catch (error) {
-            setError('Failed to retrieve user info');
+            setError('Not logged in');
+            history('/login.html');
         }
     }, []);
 

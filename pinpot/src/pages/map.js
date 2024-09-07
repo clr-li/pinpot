@@ -11,7 +11,7 @@ import UserProfile from '../components/UserData';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
 
-function Map() {
+function MapPage() {
     const [user, setUser] = useState(null);
     const [posts, setPosts] = useState([]);
     const [locations, setLocations] = useState([]);
@@ -78,4 +78,4 @@ function Map() {
     );
 }
 
-export default Map;
+export default MapPage;

@@ -1,15 +1,15 @@
-// Filename - login.js
+// Filename - explore.js
 import React from 'react';
 import Navbar from '../components/Navbar';
-import LoginForm from '../components/Login';
+import Explore from '../components/Explore';
 
-function LoginPage() {
+function ExplorePage() {
     return (
         <React.StrictMode>
             <Navbar></Navbar>
-            <LoginForm />
+            <Explore />
         </React.StrictMode>
     );
 }
 
-export default LoginPage;
+export default ExplorePage;

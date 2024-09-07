@@ -4,6 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const postsCol = require('./db/posts');
+const levenshtein = require('js-levenshtein');
 require('dotenv').config();
 
 const app = express();
@@ -118,6 +119,27 @@ app.get('/get-posts-by-loc', async (req, res) => {
         await postsCol.find({ uid: uid, 'location.lat': lat, 'location.lon': lon }).then(data => {
             res.send({ status: 201, data: data });
         });
+    } catch (e) {
+        res.send({ Status: 'error', data: e });
+    }
+});
+
+// Get user by query
+app.get('/search-users', async (req, res) => {
+    const { search, limit = 5 } = req.query;
+
+    try {
+        const users = await userCol.find({}).exec();
+
+        const results = users.map(user => ({
+            ...user._doc, // spread to include all fields
+            distance: levenshtein(search, user.username),
+        }));
+
+        results.sort((a, b) => a.distance - b.distance);
+        const closestUsers = results.slice(0, parseInt(limit));
+
+        res.send({ Status: 'success', data: closestUsers });
     } catch (e) {
         res.send({ Status: 'error', data: e });
     }

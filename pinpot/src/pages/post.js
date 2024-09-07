@@ -10,10 +10,6 @@ function PostPage() {
     const [selectPosition, setSelectPosition] = useState(null);
     const [postImage, setPostImage] = useState(null);
 
-    const handlePostUpdate = () => {
-        // Handle any logic needed after updating the post settings, e.g., refresh data
-    };
-
     return (
         <React.StrictMode>
             <Navbar />

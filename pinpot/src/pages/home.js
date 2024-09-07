@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBox from '../components/SearchBox';
 import Maps from '../components/Maps';
 
-function Home() {
+function HomePage() {
     const [selectPosition, setSelectPosition] = useState(null);
     return (
         <React.StrictMode>
@@ -26,4 +26,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default HomePage;

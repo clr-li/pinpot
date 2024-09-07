@@ -3,7 +3,7 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import SignupForm from '../components/Signup';
 
-function Signup() {
+function SignupPage() {
     return (
         <React.StrictMode>
             <Navbar></Navbar>
@@ -12,4 +12,4 @@ function Signup() {
     );
 }
 
-export default Signup;
+export default SignupPage;

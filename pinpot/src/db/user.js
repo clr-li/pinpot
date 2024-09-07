@@ -14,6 +14,7 @@ const newSchema = new mongoose.Schema(
         username: {
             type: String,
             required: true,
+            index: true, // Index for text search
         },
         password: {
             type: String,
@@ -28,6 +29,9 @@ const newSchema = new mongoose.Schema(
         collection: 'users',
     },
 );
+
+// Create a text index on the username field
+newSchema.index({ username: 'text' });
 
 const userCol = mongoose.model('users', newSchema);
 

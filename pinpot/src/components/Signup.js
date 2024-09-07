@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { faCheck, faTimes, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/; // Must start with lower or uppercase letter, must be 4-24 characters long
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{8,24}$/; // Requires one uppercase and lowercase letter, one special character, and must be 8-24 characters long
+const USER_REGEX = /^[a-z][a-z0-9-_]{3,23}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function SignupForm() {
@@ -133,7 +133,7 @@ function SignupForm() {
                             <br />
                             Must begin with a letter.
                             <br />
-                            Letters, numbers, underscores, hyphens allowed.
+                            Lowercase letters, numbers, underscores, and hyphens allowed.
                         </p>
 
                         <label htmlFor="password">

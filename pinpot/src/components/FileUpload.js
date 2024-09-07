@@ -3,19 +3,21 @@ import React, { useState, useEffect } from 'react';
 import PopupMessage from './PopupMessage';
 import { getUserFromToken } from '../auth';
 import '../styles/uploader.css';
+import { useNavigate } from 'react-router-dom';
 
 function FileUploader(props) {
+    const { selectPosition, setPostImage } = props;
     const [image, setImage] = useState('');
     const [user, setUser] = useState(null);
     const [message, setMessage] = useState(null); // State for message (error or success)
-    const { selectPosition, setPostImage } = props;
+    const history = useNavigate();
 
     useEffect(() => {
         try {
             const userInfo = getUserFromToken();
             setUser(userInfo);
         } catch (error) {
-            console.log('Error getting user info:', error);
+            history('/login.html');
         }
     }, []);
 
