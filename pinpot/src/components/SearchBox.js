@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
+import '../index.css';
 
 const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org/search?';
 
@@ -15,48 +15,45 @@ function SearchBox(props) {
     const [listPlace, setListPlace] = useState([]);
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex' }}>
-                <div style={{ flex: 1 }}>
-                    <OutlinedInput
-                        style={{ width: '100%' }}
-                        value={searchText}
-                        onChange={event => {
-                            setSearchText(event.target.value);
-                        }}
-                    />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', padding: '0px 20px' }}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            // Search
-                            const params = {
-                                q: searchText,
-                                format: 'json',
-                                addressdetails: 1,
-                                polygon_geojson: 0,
-                            };
-                            const queryString = new URLSearchParams(params).toString();
-                            const requestOptions = {
-                                method: 'GET',
-                                redirect: 'follow',
-                            };
-                            fetch(`${NOMINATIM_BASE_URL}${queryString}`, requestOptions)
-                                .then(response => response.text())
-                                .then(result => {
-                                    setListPlace(JSON.parse(result));
-                                })
-                                .catch(err => console.log('err: ', err));
-                        }}
-                    >
-                        Search
-                    </Button>
-                </div>
+        <div className="search-box-wrapper">
+            <div className="search-box-container">
+                <input
+                    className="search-input"
+                    value={searchText}
+                    onChange={event => {
+                        setSearchText(event.target.value);
+                    }}
+                />
+                <Button
+                    className="search-button"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        // Search
+                        const params = {
+                            q: searchText,
+                            format: 'json',
+                            addressdetails: 1,
+                            polygon_geojson: 0,
+                        };
+                        const queryString = new URLSearchParams(params).toString();
+                        const requestOptions = {
+                            method: 'GET',
+                            redirect: 'follow',
+                        };
+                        fetch(`${NOMINATIM_BASE_URL}${queryString}`, requestOptions)
+                            .then(response => response.text())
+                            .then(result => {
+                                setListPlace(JSON.parse(result));
+                            })
+                            .catch(err => console.log('err: ', err));
+                    }}
+                >
+                    Search
+                </Button>
             </div>
             {listPlace.length > 0 && (
-                <List component="nav" aria-label="main mailbox folders">
+                <List component="nav" aria-label="search results">
                     {listPlace.map(item => (
                         <div key={item?.place_id}>
                             <ListItem
@@ -65,12 +62,13 @@ function SearchBox(props) {
                                     setSelectPosition(item);
                                     setListPlace([]); // Clear the list to hide it
                                 }}
+                                className="list-item"
                             >
                                 <ListItemIcon>
                                     <img
                                         src="./marker.png"
                                         alt="Placeholder"
-                                        style={{ width: 38, height: 38 }}
+                                        className="marker-icon"
                                     />
                                 </ListItemIcon>
                                 <ListItemText primary={item?.display_name} />

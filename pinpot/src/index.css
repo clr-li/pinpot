@@ -44,6 +44,51 @@ textarea {
     border-radius: 0.5rem;
 }
 
+/* SearchBox.css */
+.search-box-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 100%;
+}
+
+.search-box-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between the input and button */
+    margin-bottom: 10px;
+}
+
+.search-input {
+    flex: 1;
+    width: 100%;
+    height: 38px; /* Increase this value to make the input taller */
+    padding: 10px; /* Add padding to ensure text doesn't touch edges */
+    box-sizing: border-box; /* Ensure padding is included in height */
+}
+
+.search-button {
+    padding: 0.5rem 1rem;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.marker-icon {
+    width: 38px;
+    height: 38px;
+    margin-right: 10px;
+}
+
+.list-item:hover {
+    background-color: #f0f0f0; /* Highlight effect on hover */
+}
+
 .errmsg {
     background-color: lightpink;
     color: firebrick;
@@ -163,19 +208,29 @@ textarea {
 }
 
 .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
-    padding: 10px;
-    justify-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.post-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .post-img {
-    width: 100%;
-    aspect-ratio: 1 / 1; /* Ensures the container is always square */
-    object-fit: cover; /* Crops the image to fill the square */
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
     border-radius: 8px;
-    transition: transform 0.2s ease-in-out;
+    border: 1px solid #e0e0e0;
+}
+
+.post-date {
+    margin-top: 0.1rem;
+    font-size: 0.875rem;
+    color: #666;
 }
 
 .post-img:hover {

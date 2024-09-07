@@ -91,9 +91,7 @@ app.post('/upload-post', async (req, res) => {
             uploadDate,
             takenDate,
         });
-        console.log('created');
         res.status(201).json('success');
-        console.log('sent', res);
     } catch (e) {
         res.send({ Status: 'error', data: e });
     }

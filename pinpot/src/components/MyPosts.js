@@ -1,3 +1,4 @@
+// Filename: MyPosts.js
 import React, { useState, useEffect } from 'react';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
@@ -40,10 +41,18 @@ function MyPosts(props) {
         fetchData();
     }, [selectPosition]);
 
+    const formatDate = timestamp => {
+        const date = new Date(timestamp);
+        return date.toLocaleDateString(); // Format date as needed
+    };
+
     return (
         <div className="posts-grid">
             {posts.map((data, index) => (
-                <img key={index} className="post-img" src={data.img} alt="a post" />
+                <div key={index} className="post-container">
+                    <img className="post-img" src={data.img} alt="a post" />
+                    <div className="post-date">{formatDate(data.uploadDate)}</div>
+                </div>
             ))}
         </div>
     );
