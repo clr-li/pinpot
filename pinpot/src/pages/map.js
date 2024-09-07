@@ -1,5 +1,5 @@
-// Filename - home.js
-import React, { useState } from 'react';
+// Filename - map.js
+import React, { useState, useEffect } from 'react';
 import '../index.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import env from 'react-dotenv';
@@ -7,8 +7,25 @@ import Navbar from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBox from '../components/SearchBox';
 import Maps from '../components/Maps';
+import { fetchProtectedData } from '../auth';
+import { useNavigate } from 'react-router-dom';
 
-function Home() {
+let permitted = true;
+try {
+    let response = await fetchProtectedData();
+    console.log(response);
+} catch (error) {
+    permitted = false;
+}
+
+function Map() {
+    const history = useNavigate();
+
+    useEffect(() => {
+        if (!permitted) {
+            history('/login.html');
+        }
+    });
     const [selectPosition, setSelectPosition] = useState(null);
     return (
         <GoogleOAuthProvider clientId={env.OAUTH_CLIENT_ID}>
@@ -35,4 +52,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default Map;

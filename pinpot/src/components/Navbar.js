@@ -10,7 +10,7 @@ function MainNavbar() {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="/">Map</Nav.Link>
+                        <Nav.Link href="/map.html">Map</Nav.Link>
                         <Nav.Link href="/upload.html">Upload</Nav.Link>
                         <Nav.Link href="#pricing">Search</Nav.Link>
                     </Nav>
