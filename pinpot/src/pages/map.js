@@ -58,14 +58,14 @@ function Map() {
         <React.StrictMode>
             <Navbar />
             <div className="half-half-containter">
-                <div className="half-half-containter">
+                <div style={{ width: '50vw', height: '100vh' }}>
                     <Maps
                         selectPosition={selectPosition}
                         locations={locations}
                         onMarkerClick={handleMarkerClick}
                     />
                 </div>
-                <div className="half-half-containter">
+                <div style={{ width: '50vw', height: '100vh' }}>
                     <UserProfile />
                     <SearchBox
                         selectPosition={selectPosition}

@@ -12,10 +12,10 @@ function Home() {
         <React.StrictMode>
             <Navbar></Navbar>
             <div className="half-half-containter">
-                <div className="half-half-containter">
+                <div style={{ width: '50vw', height: '100%' }}>
                     <Maps selectPosition={selectPosition} />
                 </div>
-                <div className="half-half-containter">
+                <div style={{ width: '50vw' }}>
                     <SearchBox
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}

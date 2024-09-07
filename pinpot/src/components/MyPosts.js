@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
+import '../styles/posts.css';
 
 function MyPosts(props) {
     const [user, setUser] = useState(null);
