@@ -1,8 +1,6 @@
 // Filename - map.js
 import React, { useState, useEffect } from 'react';
 import '../index.css';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import env from 'react-dotenv';
 import Navbar from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBox from '../components/SearchBox';
@@ -10,6 +8,7 @@ import Maps from '../components/Maps';
 import { fetchProtectedData } from '../auth';
 import { useNavigate } from 'react-router-dom';
 import UserProfile from '../components/UserData';
+import Posts from '../components/Posts';
 
 let permitted = true; // TODO: Turn this into a component
 try {
@@ -28,17 +27,10 @@ function Map() {
     });
     const [selectPosition, setSelectPosition] = useState(null);
     return (
-        <GoogleOAuthProvider clientId={env.OAUTH_CLIENT_ID}>
+        <React.StrictMode>
             <Navbar></Navbar>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    width: '100vw',
-                    height: '100vh',
-                }}
-            >
-                <div style={{ width: '50vw', height: '100%' }}>
+            <div className="half-half-containter">
+                <div style={{ width: '50vw' }}>
                     <Maps selectPosition={selectPosition} />
                 </div>
                 <div style={{ width: '50vw' }}>
@@ -47,9 +39,10 @@ function Map() {
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}
                     />
+                    <Posts></Posts>
                 </div>
             </div>
-        </GoogleOAuthProvider>
+        </React.StrictMode>
     );
 }
 

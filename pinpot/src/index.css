@@ -79,3 +79,10 @@ textarea {
     color: limegreen;
     margin-left: 0.25rem;
 }
+
+.half-half-containter {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 100vh;
+}
