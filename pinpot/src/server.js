@@ -98,12 +98,25 @@ app.post('/upload-post', async (req, res) => {
     }
 });
 
-// Get post by uid
+// Get posts by uid
 app.get('/get-post', async (req, res) => {
     const { uid } = req.query;
 
     try {
         await postsCol.find({ uid: uid }).then(data => {
+            res.send({ status: 201, data: data });
+        });
+    } catch (e) {
+        res.send({ Status: 'error', data: e });
+    }
+});
+
+// Get posts by uid and location
+app.get('/get-posts-by-loc', async (req, res) => {
+    const { uid, lat, lon } = req.query;
+
+    try {
+        await postsCol.find({ uid: uid, 'location.lat': lat, 'location.lon': lon }).then(data => {
             res.send({ status: 201, data: data });
         });
     } catch (e) {

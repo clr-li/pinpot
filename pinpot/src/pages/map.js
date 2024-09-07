@@ -4,11 +4,10 @@ import '../index.css';
 import Navbar from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBox from '../components/SearchBox';
+import MyPosts from '../components/MyPosts';
 import Maps from '../components/Maps';
-import { fetchProtectedData } from '../auth';
 import { useNavigate } from 'react-router-dom';
 import UserProfile from '../components/UserData';
-import Posts from '../components/Posts';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
 
@@ -34,9 +33,11 @@ function Map() {
                 });
 
                 if (res.status === 200) {
-                    const extractedLocations = res.data.data.map(post => post.location);
+                    let extractedLocations = res.data.data.map(post => post.location);
+                    extractedLocations = Array.from(
+                        new Set(extractedLocations.map(loc => JSON.stringify(loc))),
+                    ).map(loc => JSON.parse(loc));
                     setLocations(extractedLocations);
-                    console.log(extractedLocations);
                     setPosts(res.data.data);
                 } else {
                     console.log('Failed to fetch posts');
@@ -63,7 +64,7 @@ function Map() {
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}
                     />
-                    <Posts></Posts>
+                    <MyPosts selectPosition={selectPosition}></MyPosts>
                 </div>
             </div>
         </React.StrictMode>
