@@ -181,3 +181,25 @@ textarea {
 .post-img:hover {
     transform: scale(1.05);
 }
+
+.success-message {
+    background-color: lightgreen;
+    color: green;
+    font-weight: bold;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.error-message {
+    background-color: lightcoral;
+    color: darkred;
+    font-weight: bold;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.hide {
+    display: none;
+}

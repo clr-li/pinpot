@@ -1,10 +1,13 @@
+// Filename: FileUploader.js
 import React, { useState, useEffect } from 'react';
-import { getUserFromToken } from '../auth';
 import axios from 'axios';
+import PopupMessage from './PopupMessage';
+import { getUserFromToken } from '../auth';
 
 function FileUploader(props) {
     const [image, setImage] = useState('');
     const [user, setUser] = useState(null);
+    const [message, setMessage] = useState(null); // State for message (error or success)
     const { selectPosition } = props;
 
     useEffect(() => {
@@ -25,6 +28,8 @@ function FileUploader(props) {
                 setImage(resizedImage);
             } catch (error) {
                 console.log('Error processing file:', error);
+                setMessage({ text: 'Error processing file.', type: 'error' });
+                setTimeout(() => setMessage(null), 3000);
             }
         }
     }
@@ -89,11 +94,15 @@ function FileUploader(props) {
     async function uploadImage() {
         if (!user) {
             console.log('User not authenticated');
+            setMessage({ text: 'User not authenticated.', type: 'error' });
+            setTimeout(() => setMessage(null), 3000);
             return;
         }
 
         if (!selectPosition) {
-            alert('Please select the location of the image');
+            setMessage({ text: 'Please select the location of the image.', type: 'error' });
+            setTimeout(() => setMessage(null), 3000);
+            return;
         }
 
         try {
@@ -108,12 +117,16 @@ function FileUploader(props) {
             });
 
             if (response.status === 201) {
-                console.log('File uploaded');
+                setMessage({ text: 'File uploaded successfully!', type: 'success' });
+                setTimeout(() => setMessage(null), 3000); // Hide message after 3 seconds
             } else {
-                console.log('Failed to upload');
+                setMessage({ text: 'Failed to upload file.', type: 'error' });
+                setTimeout(() => setMessage(null), 3000);
             }
         } catch (e) {
             console.log('Error uploading:', e);
+            setMessage({ text: 'Error uploading file.', type: 'error' });
+            setTimeout(() => setMessage(null), 3000);
         }
     }
 
@@ -122,8 +135,9 @@ function FileUploader(props) {
             <h2>Upload Image</h2>
             <br />
             <input type="file" accept="image/*" onChange={convertToBase64} />
-            {image && <img width={120} height={120} src={image} alt="Preview" />}
+            {image && <img className="image-preview" src={image} alt="Preview" />}
             <button onClick={uploadImage}>Upload</button>
+            {message && <PopupMessage message={message.text} type={message.type} />}
         </div>
     );
 }

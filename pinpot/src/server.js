@@ -78,8 +78,7 @@ app.get('/protected', authenticateToken, (req, res) => {
 
 // Upload image
 app.post('/upload-post', async (req, res) => {
-    const { uid, base64, postType, img, text, location, visibility, uploadDate, takenDate } =
-        req.body;
+    const { uid, postType, img, text, location, visibility, uploadDate, takenDate } = req.body;
 
     try {
         await postsCol.create({
@@ -92,7 +91,9 @@ app.post('/upload-post', async (req, res) => {
             uploadDate,
             takenDate,
         });
-        res.status(201);
+        console.log('created');
+        res.status(201).json('success');
+        console.log('sent', res);
     } catch (e) {
         res.send({ Status: 'error', data: e });
     }
