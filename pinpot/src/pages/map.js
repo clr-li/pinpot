@@ -9,29 +9,53 @@ import { fetchProtectedData } from '../auth';
 import { useNavigate } from 'react-router-dom';
 import UserProfile from '../components/UserData';
 import Posts from '../components/Posts';
-
-let permitted = true; // TODO: Turn this into a component
-try {
-    await fetchProtectedData();
-} catch (error) {
-    permitted = false;
-}
+import { getUserFromToken } from '../auth';
+import axios from 'axios';
 
 function Map() {
+    const [user, setUser] = useState(null);
+    const [posts, setPosts] = useState([]);
+    const [locations, setLocations] = useState([]);
     const history = useNavigate();
 
     useEffect(() => {
-        if (!permitted) {
-            history('/login.html');
+        async function fetchData() {
+            // TODO: Turn this into a component
+            try {
+                const userInfo = getUserFromToken();
+                if (!userInfo) {
+                    history('/login.html');
+                }
+
+                setUser(userInfo);
+
+                const res = await axios.get('http://localhost:8000/get-post', {
+                    params: { uid: userInfo.id },
+                });
+
+                if (res.status === 200) {
+                    const extractedLocations = res.data.data.map(post => post.location);
+                    setLocations(extractedLocations);
+                    console.log(extractedLocations);
+                    setPosts(res.data.data);
+                } else {
+                    console.log('Failed to fetch posts');
+                }
+            } catch (error) {
+                console.log('Error fetching data:', error);
+            }
         }
-    });
+
+        fetchData();
+    }, []);
+
     const [selectPosition, setSelectPosition] = useState(null);
     return (
         <React.StrictMode>
             <Navbar></Navbar>
             <div className="half-half-containter">
                 <div style={{ width: '50vw' }}>
-                    <Maps selectPosition={selectPosition} />
+                    <Maps selectPosition={selectPosition} locations={locations} />
                 </div>
                 <div style={{ width: '50vw' }}>
                     <UserProfile></UserProfile>

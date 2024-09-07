@@ -7,20 +7,16 @@ function Posts() {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        // Function to fetch user data and posts
         async function fetchData() {
             try {
-                // Get user info from token
                 const userInfo = getUserFromToken();
                 if (!userInfo) {
                     console.log('User not authenticated');
                     return;
                 }
 
-                // Set user state
                 setUser(userInfo);
 
-                // Fetch posts
                 const res = await axios.get('http://localhost:8000/get-post', {
                     params: { uid: userInfo.id },
                 });
@@ -36,7 +32,7 @@ function Posts() {
         }
 
         fetchData();
-    }, []); // Dependency array can be updated to include dependencies as needed
+    }, []);
 
     return (
         <div>
