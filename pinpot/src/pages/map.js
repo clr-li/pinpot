@@ -30,14 +30,14 @@ function MapPage() {
                     params: { uid: userInfo.id },
                 });
 
-                if (res.status === 200) {
+                if (res.status === 201) {
                     let extractedLocations = res.data.data.map(post => post.location);
                     extractedLocations = Array.from(
                         new Set(extractedLocations.map(loc => JSON.stringify(loc))),
                     ).map(loc => JSON.parse(loc));
                     setLocations(extractedLocations);
                 } else {
-                    console.log('Failed to fetch posts');
+                    console.log('Failed to fetch posts', res.status);
                 }
             } catch (error) {
                 console.log('Error fetching data:', error);

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import '../styles/search.css'; // Include any styles you need
 
+// TODO: change follow to unfollow when already followed
 const SearchResults = ({ searchResults, handleFollowUser }) => {
     return (
         <div className="search-results">

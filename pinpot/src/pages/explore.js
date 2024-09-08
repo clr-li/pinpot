@@ -10,12 +10,15 @@ import { getUserFromToken } from '../auth';
 import axios from 'axios';
 import SearchBox from '../components/SearchBox';
 import { useLocation } from 'react-router-dom';
+import ExplorePosts from '../components/ExplorePosts';
+import { postVisibility } from '../enum';
 
 function ExplorePage() {
     const [locations, setLocations] = useState([]);
     const [selectPosition, setSelectPosition] = useState(null);
     const history = useNavigate();
     const location = useLocation();
+    const [uids, setUids] = useState([]);
     const [visibilityFilter, setVisibilityFilter] = useState({
         // TODO: use enum
         public: true,
@@ -42,17 +45,24 @@ function ExplorePage() {
                 );
 
                 if (username) {
-                    res = await axios.get('http://localhost:8000/get-posts-by-visibility-loc', {
+                    res = await axios.get('http://localhost:8000/get-posts-by-username-loc', {
                         params: { username, visibility: visibilityArray },
                     });
                 } else {
-                    // Fetch locations and posts of people the user follows
-                    res = await axios.get('http://localhost:8000/get-followed-posts-loc', {
-                        params: { uid: userInfo.id },
+                    const followRes = await axios.get('http://localhost:8000/get-followed-uids', {
+                        params: {
+                            uid: userInfo.id,
+                        },
+                    });
+                    const followedIds = followRes.data.data.map(obj => obj.followedId);
+                    setUids(followedIds);
+
+                    res = await axios.get('http://localhost:8000/get-posts-by-uids', {
+                        params: { uids: followedIds, visibility: postVisibility.PUBLIC },
                     });
                 }
 
-                if (res.status === 200) {
+                if (res.status === 201) {
                     let extractedLocations = res.data.data.map(post => post.location);
                     extractedLocations = Array.from(
                         new Set(extractedLocations.map(loc => JSON.stringify(loc))),
@@ -90,6 +100,7 @@ function ExplorePage() {
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}
                     />
+                    <ExplorePosts selectPosition={selectPosition} uids={uids} />
                 </div>
             </div>
         </React.StrictMode>

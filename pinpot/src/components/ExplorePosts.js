@@ -1,4 +1,4 @@
-// Filename - MyPosts.js
+// Filename - ExplorePosts.js
 import React, { useState, useEffect } from 'react';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
@@ -6,12 +6,14 @@ import '../styles/posts.css';
 import '../styles/popup.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { useLocation } from 'react-router-dom';
 import { postVisibility } from '../enum';
 
-function MyPosts(props) {
+function ExplorePosts(props) {
     const [posts, setPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState(null);
-    const { selectPosition } = props;
+    const { selectPosition, uids } = props;
+    const location = useLocation();
 
     useEffect(() => {
         async function fetchData() {
@@ -21,19 +23,34 @@ function MyPosts(props) {
                     return;
                 }
 
-                if (selectPosition) {
-                    const res = await axios.get('http://localhost:8000/get-posts-by-loc', {
-                        params: {
-                            uid: userInfo.id,
-                            lat: selectPosition.lat,
-                            lon: selectPosition.lon,
-                        },
-                    });
+                const params = new URLSearchParams(location.search);
+                const username = params.get('username');
+                let res = null;
 
+                if (selectPosition) {
+                    if (username) {
+                        res = await axios.get('http://localhost:8000/get-posts-by-username-loc', {
+                            params: {
+                                username: username,
+                                lat: selectPosition.lat,
+                                lon: selectPosition.lon,
+                                visibility: postVisibility.PUBLIC,
+                            },
+                        });
+                    } else {
+                        res = await axios.get('http://localhost:8000/get-posts-by-uids-loc', {
+                            params: {
+                                uids: uids,
+                                lat: selectPosition.lat,
+                                lon: selectPosition.lon,
+                                visibility: postVisibility.PUBLIC,
+                            },
+                        });
+                    }
                     if (res.status === 201) {
                         setPosts(res.data.data);
                     } else {
-                        console.log('Failed to fetch posts', res.status);
+                        console.log('Failed to fetch posts');
                     }
                 }
             } catch (error) {
@@ -91,4 +108,4 @@ function MyPosts(props) {
     );
 }
 
-export default MyPosts;
+export default ExplorePosts;

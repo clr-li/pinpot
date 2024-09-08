@@ -106,28 +106,33 @@ app.get('/get-post', async (req, res) => {
 
     try {
         await postsCol.find({ uid: uid }).then(data => {
-            res.send({ status: 201, data: data });
+            res.status(201).send({ status: 'success', data: data });
         });
     } catch (e) {
         res.send({ Status: 'error', data: e });
     }
 });
 
-// Get posts by uid and location
+// Get posts by uid, location, and visibility
 app.get('/get-posts-by-loc', async (req, res) => {
-    const { uid, lat, lon } = req.query;
+    const { uid, lat, lon, visibility } = req.query;
+
+    let findDict = { uid: uid, 'location.lat': lat, 'location.lon': lon };
+    if (visibility) {
+        findDict = { uid: uid, 'location.lat': lat, 'location.lon': lon, visibility: visibility };
+    }
 
     try {
-        await postsCol.find({ uid: uid, 'location.lat': lat, 'location.lon': lon }).then(data => {
-            res.send({ status: 201, data: data });
+        await postsCol.find(findDict).then(data => {
+            res.status(201).send({ status: 'success', data: data });
         });
     } catch (e) {
         res.send({ Status: 'error', data: e });
     }
 });
 
-// Get posts by username and post visibility
-app.get('/get-posts-by-visibility-loc', async (req, res) => {
+// Get posts by username, post visibility, and location
+app.get('/get-posts-by-username-loc', async (req, res) => {
     const { username, visibility, lat, lon } = req.query;
 
     // Get uid
@@ -147,7 +152,7 @@ app.get('/get-posts-by-visibility-loc', async (req, res) => {
 
     try {
         await postsCol.find(findDict).then(data => {
-            res.send({ status: 201, data: data });
+            res.status(201).send({ Status: 'success', data: data });
         });
     } catch (e) {
         res.send({ Status: 'error', data: e });
@@ -169,7 +174,7 @@ app.get('/search-users', async (req, res) => {
         results.sort((a, b) => a.distance - b.distance);
         const closestUsers = results.slice(0, parseInt(limit));
 
-        res.send({ Status: 'success', data: closestUsers });
+        res.status(201).send({ Status: 'success', data: closestUsers });
     } catch (e) {
         res.send({ Status: 'error', data: e });
     }
@@ -195,6 +200,48 @@ app.post('/follow-user', async (req, res) => {
         await newRelation.save();
 
         res.status(201).send({ Status: 'success', data: 'User followed successfully' });
+    } catch (e) {
+        res.send({ Status: 'error', data: e.message });
+    }
+});
+
+// Get followed people by user
+app.get('/get-followed-uids', async (req, res) => {
+    const { uid } = req.query;
+    try {
+        await followCol.find({ followerId: uid }).then(data => {
+            res.status(201).send({ Status: 'success', data: data });
+        });
+    } catch (e) {
+        res.send({ Status: 'error', data: e.message });
+    }
+});
+
+// Get posts by a list of uids and visibility
+app.get('/get-posts-by-uids', async (req, res) => {
+    const { uids, visibility } = req.query;
+
+    try {
+        // Find posts where the uid is in the list of uids
+        const posts = await postsCol.find({ uid: { $in: uids }, visibility: visibility });
+        res.status(201).send({ Status: 'success', data: posts });
+    } catch (e) {
+        res.send({ Status: 'error', data: e.message });
+    }
+});
+
+// Get posts by a list of uids, location, and visibility
+app.get('/get-posts-by-uids-loc', async (req, res) => {
+    const { uids, lat, lon, visibility } = req.query;
+
+    try {
+        const posts = await postsCol.find({
+            uid: { $in: uids },
+            'location.lat': lat,
+            'location.lon': lon,
+            visibility: visibility,
+        });
+        res.status(201).send({ Status: 'success', data: posts });
     } catch (e) {
         res.send({ Status: 'error', data: e.message });
     }

@@ -36,7 +36,7 @@ function Search() {
                 },
             });
 
-            if (response.status === 200) {
+            if (response.status === 201) {
                 setSearchResults(response.data.data);
             } else {
                 setMessage({ text: 'Failed to fetch users.', type: 'error' });
