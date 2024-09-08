@@ -12,8 +12,6 @@ import axios from 'axios';
 import { postVisibility } from '../enum';
 
 function MapPage() {
-    const [user, setUser] = useState(null);
-    const [posts, setPosts] = useState([]);
     const [locations, setLocations] = useState([]);
     const [selectPosition, setSelectPosition] = useState(null);
     const history = useNavigate();
@@ -23,7 +21,6 @@ function MapPage() {
         let userInfo = null;
         try {
             userInfo = getUserFromToken();
-            setUser(userInfo);
         } catch (error) {
             history('/login.html');
         }
@@ -37,7 +34,7 @@ function MapPage() {
                 if (username) {
                     // Fetch user information based on the username from the URL
                     const visibility = postVisibility.PUBLIC;
-                    res = await axios.get('http://localhost:8000/get-posts-by-visibility', {
+                    res = await axios.get('http://localhost:8000/get-posts-by-visibility-loc', {
                         params: { username, visibility },
                     });
                 } else {
@@ -52,7 +49,6 @@ function MapPage() {
                         new Set(extractedLocations.map(loc => JSON.stringify(loc))),
                     ).map(loc => JSON.parse(loc));
                     setLocations(extractedLocations);
-                    setPosts(res.data.data);
                 } else {
                     console.log('Failed to fetch posts');
                 }

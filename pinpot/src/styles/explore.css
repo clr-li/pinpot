@@ -85,3 +85,19 @@
 .user-info button:hover {
     background: #218838;
 }
+
+.user-info a {
+    color: #007bff; /* Set the link color */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Make the text bold */
+    transition: color 0.3s ease; /* Add a smooth transition for color change */
+}
+
+.user-info a:hover {
+    color: #0056b3; /* Darker shade on hover */
+    text-decoration: underline; /* Underline the link on hover */
+}
+
+.user-info a:active {
+    color: #004085; /* Even darker shade when the link is active/clicked */
+}

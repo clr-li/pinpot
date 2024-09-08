@@ -15,6 +15,8 @@ app.use(cors());
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+//TODO: HIGH PRIORITY - require authentication for endpoints
+
 // Helper function to generate JWT
 function generateToken(user) {
     return jwt.sign({ id: user._id, username: user.username, email: user.email }, JWT_SECRET, {
@@ -125,36 +127,27 @@ app.get('/get-posts-by-loc', async (req, res) => {
     }
 });
 
-// Get uid by username
-app.get('/get-uid', async (req, res) => {
-    const { username } = req.query;
-
-    try {
-        await userCol.findOne({ username: username }).then(data => {
-            res.send({ status: 201, data: data });
-        });
-    } catch (e) {
-        res.send({ Status: 'error', data: e });
-    }
-});
-
 // Get posts by username and post visibility
-app.get('/get-posts-by-visibility', async (req, res) => {
-    const { username, visibility } = req.query;
+app.get('/get-posts-by-visibility-loc', async (req, res) => {
+    const { username, visibility, lat, lon } = req.query;
 
     // Get uid
     let uid = null;
     try {
         await userCol.findOne({ username: username }).then(data => {
             uid = data.id;
-            console.log('uid', uid);
         });
     } catch (e) {
         res.send({ Status: 'error', data: e });
     }
 
+    let findDict = { uid: uid, visibility: visibility };
+    if (lat && lon) {
+        findDict = { uid: uid, visibility: visibility, 'location.lat': lat, 'location.lon': lon };
+    }
+
     try {
-        await postsCol.find({ uid: uid, visibility: visibility }).then(data => {
+        await postsCol.find(findDict).then(data => {
             res.send({ status: 201, data: data });
         });
     } catch (e) {

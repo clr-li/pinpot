@@ -5,12 +5,14 @@ import '../styles/posts.css';
 import '../styles/popup.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { postVisibility } from '../enum';
 
 function MyPosts(props) {
-    const [user, setUser] = useState(null);
     const [posts, setPosts] = useState([]);
-    const [selectedPost, setSelectedPost] = useState(null); // State for selected post
+    const [selectedPost, setSelectedPost] = useState(null);
     const { selectPosition } = props;
+    const location = useLocation();
 
     useEffect(() => {
         async function fetchData() {
@@ -20,16 +22,29 @@ function MyPosts(props) {
                     return;
                 }
 
-                setUser(userInfo);
+                const params = new URLSearchParams(location.search);
+                const username = params.get('username');
 
-                if (selectPosition && selectPosition.lat && selectPosition.lon) {
-                    const res = await axios.get('http://localhost:8000/get-posts-by-loc', {
-                        params: {
-                            uid: userInfo.id,
-                            lat: selectPosition.lat,
-                            lon: selectPosition.lon,
-                        },
-                    });
+                if (selectPosition) {
+                    let res = null;
+                    if (username == null) {
+                        res = await axios.get('http://localhost:8000/get-posts-by-loc', {
+                            params: {
+                                uid: userInfo.id,
+                                lat: selectPosition.lat,
+                                lon: selectPosition.lon,
+                            },
+                        });
+                    } else {
+                        res = await axios.get('http://localhost:8000/get-posts-by-visibility-loc', {
+                            params: {
+                                username: username,
+                                visibility: postVisibility.PUBLIC,
+                                lat: selectPosition.lat,
+                                lon: selectPosition.lon,
+                            },
+                        });
+                    }
 
                     if (res.status === 200) {
                         setPosts(res.data.data);

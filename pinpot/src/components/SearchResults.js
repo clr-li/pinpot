@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import '../styles/explore.css'; // Include any styles you need
 
 const SearchResults = ({ searchResults, handleFollowUser }) => {
@@ -9,7 +10,8 @@ const SearchResults = ({ searchResults, handleFollowUser }) => {
                 searchResults.map(user => (
                     <div key={user._id} className="user-card">
                         <div className="user-info">
-                            <h3>{user.username}</h3>
+                            <Link to={`/map.html?username=${user.username}`}>@{user.username}</Link>
+                            &nbsp;
                             <button onClick={() => handleFollowUser(user._id)}>Follow</button>
                         </div>
                     </div>
