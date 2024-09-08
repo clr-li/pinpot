@@ -82,12 +82,14 @@ function ExplorePosts(props) {
         <div className="posts-grid">
             {posts.map((data, index) => (
                 <div key={index} className="post-container">
-                    <img
-                        className="post-img"
-                        src={data.img}
-                        alt="a post"
-                        onClick={() => handleImageClick(data)} // Handle click to open popup
-                    />
+                    <div className="square-image-wrapper">
+                        <img
+                            className="post-img"
+                            src={data.img}
+                            alt="a post"
+                            onClick={() => handleImageClick(data)}
+                        />
+                    </div>
                     <div className="post-date">{formatDate(data.uploadDate)}</div>
                     {data.text && <div className="post-caption">{truncateCaption(data.text)}</div>}
                 </div>
@@ -97,7 +99,7 @@ function ExplorePosts(props) {
                 <div className="popup-overlay" onClick={closePopup}>
                     <div className="popup-content" onClick={e => e.stopPropagation()}>
                         <img className="popup-img" src={selectedPost.img} alt="Selected Post" />
-                        <div className="popup-caption">{selectedPost.text || 'No caption'}</div>
+                        <div className="popup-caption">{selectedPost.text}</div>
                         <button className="close-popup" onClick={closePopup}>
                             <FontAwesomeIcon icon={faCircleXmark} />
                         </button>

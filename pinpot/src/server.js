@@ -174,7 +174,7 @@ app.get('/search-users', async (req, res) => {
         results.sort((a, b) => a.distance - b.distance);
         const closestUsers = results.slice(0, parseInt(limit));
 
-        res.status(201).send({ Status: 'success', data: closestUsers });
+        res.status(201).send({ data: closestUsers });
     } catch (e) {
         res.send({ Status: 'error', data: e });
     }

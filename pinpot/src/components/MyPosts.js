@@ -1,4 +1,3 @@
-// Filename - MyPosts.js
 import React, { useState, useEffect } from 'react';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
@@ -53,6 +52,19 @@ function MyPosts(props) {
         return caption.length > 20 ? caption.substring(0, 20) + '...' : caption;
     };
 
+    const getVisibilityLabel = visibility => {
+        switch (visibility) {
+            case postVisibility.PUBLIC:
+                return 'Public';
+            case postVisibility.PRIVATE:
+                return 'Private';
+            case postVisibility.FRIENDS_ONLY:
+                return 'Friends Only';
+            default:
+                return 'Unknown';
+        }
+    };
+
     const handleImageClick = post => {
         setSelectedPost(post);
     };
@@ -65,12 +77,14 @@ function MyPosts(props) {
         <div className="posts-grid">
             {posts.map((data, index) => (
                 <div key={index} className="post-container">
-                    <img
-                        className="post-img"
-                        src={data.img}
-                        alt="a post"
-                        onClick={() => handleImageClick(data)} // Handle click to open popup
-                    />
+                    <div className="square-image-wrapper">
+                        <img
+                            className="post-img"
+                            src={data.img}
+                            alt="a post"
+                            onClick={() => handleImageClick(data)} // Handle click to open popup
+                        />
+                    </div>
                     <div className="post-date">{formatDate(data.uploadDate)}</div>
                     {data.text && <div className="post-caption">{truncateCaption(data.text)}</div>}
                 </div>
@@ -79,8 +93,17 @@ function MyPosts(props) {
             {selectedPost && (
                 <div className="popup-overlay" onClick={closePopup}>
                     <div className="popup-content" onClick={e => e.stopPropagation()}>
+                        <div className="popup-details">
+                            <div>
+                                <strong>Taken:</strong> {formatDate(selectedPost.takenDate)}
+                            </div>
+                            <div>
+                                <strong>Visibility:</strong>{' '}
+                                {getVisibilityLabel(selectedPost.visibility)}
+                            </div>
+                        </div>
                         <img className="popup-img" src={selectedPost.img} alt="Selected Post" />
-                        <div className="popup-caption">{selectedPost.text || 'No caption'}</div>
+                        <div className="popup-caption">{selectedPost.text}</div>
                         <button className="close-popup" onClick={closePopup}>
                             <FontAwesomeIcon icon={faCircleXmark} />
                         </button>

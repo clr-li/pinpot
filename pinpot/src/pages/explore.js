@@ -12,19 +12,15 @@ import SearchBox from '../components/SearchBox';
 import { useLocation } from 'react-router-dom';
 import ExplorePosts from '../components/ExplorePosts';
 import { postVisibility } from '../enum';
+import UserDetails from '../components/UserDetails';
 
 function ExplorePage() {
     const [locations, setLocations] = useState([]);
     const [selectPosition, setSelectPosition] = useState(null);
     const history = useNavigate();
     const location = useLocation();
+    const [userState, setUserState] = useState('');
     const [uids, setUids] = useState([]);
-    const [visibilityFilter, setVisibilityFilter] = useState({
-        // TODO: use enum
-        public: true,
-        private: false,
-        friendsOnly: false,
-    });
 
     useEffect(() => {
         let userInfo = null;
@@ -40,13 +36,10 @@ function ExplorePage() {
                 const username = params.get('username');
                 let res = null;
 
-                const visibilityArray = Object.keys(visibilityFilter).filter(
-                    key => visibilityFilter[key],
-                );
-
                 if (username) {
+                    setUserState(username);
                     res = await axios.get('http://localhost:8000/get-posts-by-username-loc', {
-                        params: { username, visibility: visibilityArray },
+                        params: { username, visibility: postVisibility.PUBLIC },
                     });
                 } else {
                     const followRes = await axios.get('http://localhost:8000/get-followed-uids', {
@@ -96,6 +89,7 @@ function ExplorePage() {
                 </div>
                 <div style={{ width: '50vw', height: '100vh' }}>
                     <UserProfile />
+                    <UserDetails username={userState}></UserDetails>
                     <SearchBox
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}

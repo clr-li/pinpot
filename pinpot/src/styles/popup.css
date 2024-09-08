@@ -11,6 +11,19 @@
     z-index: 1000;
 }
 
+.popup-details {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #555;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+}
+
+.popup-details div {
+    margin-right: 10px;
+}
+
 .popup-content {
     background: white;
     padding: 20px;
@@ -35,27 +48,18 @@
 }
 
 .popup-caption {
-    font-size: 16px;
+    margin-top: 10px;
+    font-size: 1rem;
     color: #333;
-    word-wrap: break-word; /* Break long words onto the next line */
-    overflow-wrap: break-word; /* Fallback for older browsers */
+    text-align: left;
 }
 
 .close-popup {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    background: #f00;
-    color: white;
+    top: 10px;
+    right: 10px;
+    background: none;
     border: none;
-    padding: 2px 2px; /* Adjust padding for a smaller button */
+    font-size: 1.5rem;
     cursor: pointer;
-    border-radius: 10px;
-    font-size: 14px; /* Smaller font size for the icon */
-    width: 20px; /* Fixed width */
-    height: 20px; /* Fixed height */
-    display: flex; /* Center the icon */
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
 }
