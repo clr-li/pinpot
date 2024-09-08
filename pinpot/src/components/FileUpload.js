@@ -100,7 +100,10 @@ function FileUploader(props) {
         }
 
         if (!selectPosition) {
-            setMessage({ text: 'Please select the location of the image.', type: 'error' });
+            setMessage({
+                text: 'Please select a location (a marker should appear on the map)',
+                type: 'error',
+            });
             setTimeout(() => setMessage(null), 3000);
             return;
         }

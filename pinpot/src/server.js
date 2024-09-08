@@ -7,6 +7,7 @@ const postsCol = require('./db/posts');
 const followCol = require('./db/follower');
 const levenshtein = require('js-levenshtein');
 require('dotenv').config();
+const { TOP_POST_LIKES_THRESHOLD } = require('./constants');
 
 const app = express();
 app.use(express.json());
@@ -269,6 +270,38 @@ app.post('/like-post', async (req, res) => {
 
         await post.save();
         res.status(200).send({ Status: 'success', data: post });
+    } catch (e) {
+        res.status(500).send({ Status: 'error', data: e.message });
+    }
+});
+
+// Get all public posts with more than TOP_POST_LIKES_THRESHOLD likes
+app.get('/top-posts', async (req, res) => {
+    try {
+        const posts = await postsCol.find({
+            visibility: 'public',
+            $expr: { $gte: [{ $size: '$likes' }, TOP_POST_LIKES_THRESHOLD] },
+        });
+
+        res.status(200).send({ Status: 'success', data: posts });
+    } catch (e) {
+        res.status(500).send({ Status: 'error', data: e.message });
+    }
+});
+
+// Get all top posts by location
+app.get('/top-posts-by-loc', async (req, res) => {
+    try {
+        const { lat, lon } = req.query;
+
+        const posts = await postsCol.find({
+            visibility: 'public', // TODO: use enum
+            'location.lat': lat,
+            'location.lon': lon,
+            $expr: { $gte: [{ $size: '$likes' }, TOP_POST_LIKES_THRESHOLD] },
+        });
+
+        res.status(200).send({ Status: 'success', data: posts });
     } catch (e) {
         res.status(500).send({ Status: 'error', data: e.message });
     }

@@ -1,4 +1,4 @@
-// Filename: ExplorePosts.js
+// Filename: TopPosts.js
 import React, { useState, useEffect } from 'react';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
@@ -6,15 +6,12 @@ import '../styles/posts.css';
 import '../styles/popup.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faHeart } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router-dom';
 import { postVisibility } from '../enum';
 
-function ExplorePosts(props) {
+function TopPosts({ selectPosition }) {
     const [posts, setPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState(null);
     const [likedPosts, setLikedPosts] = useState(new Set()); // Track liked posts
-    const { selectPosition, uids } = props;
-    const location = useLocation();
 
     useEffect(() => {
         async function fetchData() {
@@ -24,33 +21,19 @@ function ExplorePosts(props) {
                     return;
                 }
 
-                const params = new URLSearchParams(location.search);
-                const username = params.get('username');
-                let res = null;
-
                 if (selectPosition) {
-                    if (username) {
-                        res = await axios.get('http://localhost:8000/get-posts-by-username-loc', {
-                            params: {
-                                username: username,
-                                lat: selectPosition.lat,
-                                lon: selectPosition.lon,
-                                visibility: postVisibility.PUBLIC,
-                            },
-                        });
-                    } else {
-                        res = await axios.get('http://localhost:8000/get-posts-by-uids-loc', {
-                            params: {
-                                uids: uids,
-                                lat: selectPosition.lat,
-                                lon: selectPosition.lon,
-                                visibility: postVisibility.PUBLIC,
-                            },
-                        });
-                    }
-                    if (res.status === 201) {
+                    const res = await axios.get('http://localhost:8000/top-posts-by-loc', {
+                        params: {
+                            lat: selectPosition.lat,
+                            lon: selectPosition.lon,
+                            visibility: postVisibility.PUBLIC,
+                        },
+                    });
+
+                    if (res.status === 200) {
                         const postsData = res.data.data;
                         setPosts(postsData);
+
                         // Initialize likedPosts set based on response data
                         const likedPostsSet = new Set(
                             postsData
@@ -59,11 +42,11 @@ function ExplorePosts(props) {
                         );
                         setLikedPosts(likedPostsSet);
                     } else {
-                        console.log('Failed to fetch posts');
+                        console.log('Failed to fetch top posts');
                     }
                 }
             } catch (error) {
-                console.log('Error fetching data:', error);
+                console.log('Error fetching top posts:', error);
             }
         }
 
@@ -175,4 +158,4 @@ function ExplorePosts(props) {
     );
 }
 
-export default ExplorePosts;
+export default TopPosts;
