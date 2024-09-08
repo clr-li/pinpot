@@ -1,21 +1,27 @@
-// Filename - map.js
+// Filename - explore.js
 import React, { useState, useEffect } from 'react';
 import '../index.css';
 import Navbar from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import SearchBox from '../components/SearchBox';
-import MyPosts from '../components/MyPosts';
 import Maps from '../components/Maps';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import UserProfile from '../components/UserData';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
+import SearchBox from '../components/SearchBox';
+import { useLocation } from 'react-router-dom';
 
-function MapPage() {
+function ExplorePage() {
     const [locations, setLocations] = useState([]);
     const [selectPosition, setSelectPosition] = useState(null);
     const history = useNavigate();
     const location = useLocation();
+    const [visibilityFilter, setVisibilityFilter] = useState({
+        // TODO: use enum
+        public: true,
+        private: false,
+        friendsOnly: false,
+    });
 
     useEffect(() => {
         let userInfo = null;
@@ -24,11 +30,27 @@ function MapPage() {
         } catch (error) {
             history('/login.html');
         }
+
         async function fetchData() {
             try {
-                const res = await axios.get('http://localhost:8000/get-post', {
-                    params: { uid: userInfo.id },
-                });
+                const params = new URLSearchParams(location.search);
+                const username = params.get('username');
+                let res = null;
+
+                const visibilityArray = Object.keys(visibilityFilter).filter(
+                    key => visibilityFilter[key],
+                );
+
+                if (username) {
+                    res = await axios.get('http://localhost:8000/get-posts-by-visibility-loc', {
+                        params: { username, visibility: visibilityArray },
+                    });
+                } else {
+                    // Fetch locations and posts of people the user follows
+                    res = await axios.get('http://localhost:8000/get-followed-posts-loc', {
+                        params: { uid: userInfo.id },
+                    });
+                }
 
                 if (res.status === 200) {
                     let extractedLocations = res.data.data.map(post => post.location);
@@ -45,7 +67,7 @@ function MapPage() {
         }
 
         fetchData();
-    }, [location.search, history]);
+    }, [history]);
 
     const handleMarkerClick = location => {
         setSelectPosition(location);
@@ -68,11 +90,10 @@ function MapPage() {
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}
                     />
-                    <MyPosts selectPosition={selectPosition} />
                 </div>
             </div>
         </React.StrictMode>
     );
 }
 
-export default MapPage;
+export default ExplorePage;

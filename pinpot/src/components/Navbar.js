@@ -11,8 +11,9 @@ function MainNavbar() {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
+                        <Nav.Link href="/explore.html">Explore</Nav.Link>
                         <Nav.Link href="/search.html">Search</Nav.Link>
-                        <Nav.Link href="/map.html">Map</Nav.Link>
+                        <Nav.Link href="/mymap.html">MyMap</Nav.Link>
                         <Nav.Link href="/post.html">Post</Nav.Link>
                     </Nav>
                     <Nav>

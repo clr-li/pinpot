@@ -11,7 +11,9 @@ const SearchResults = ({ searchResults, handleFollowUser }) => {
                 searchResults.map(user => (
                     <div key={user._id} className="user-card">
                         <div className="user-info">
-                            <Link to={`/map.html?username=${user.username}`}>@{user.username}</Link>
+                            <Link to={`/explore.html?username=${user.username}`}>
+                                @{user.username}
+                            </Link>
                             &nbsp;
                             <button onClick={() => handleFollowUser(user._id)}>Follow</button>
                         </div>

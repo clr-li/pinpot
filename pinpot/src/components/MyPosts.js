@@ -6,7 +6,7 @@ import '../styles/posts.css';
 import '../styles/popup.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { postVisibility } from '../enum';
 
 function MyPosts(props) {

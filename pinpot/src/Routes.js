@@ -5,13 +5,15 @@ import SignupPage from './pages/signup';
 import MapPage from './pages/map';
 import Upload from './pages/post';
 import SearchPage from './pages/search';
+import ExplorePage from './pages/explore';
 
 export const Routers = () => {
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/map.html" element={<MapPage />} />
+                <Route path="/explore.html" element={<ExplorePage />} />
+                <Route path="/mymap.html" element={<MapPage />} />
                 <Route path="/signup.html" element={<SignupPage />} />
                 <Route path="/post.html" element={<Upload />} />
                 <Route path="/login.html" element={<LoginPage />} />
