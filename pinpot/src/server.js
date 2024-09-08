@@ -247,6 +247,33 @@ app.get('/get-posts-by-uids-loc', async (req, res) => {
     }
 });
 
+// Like a post
+app.post('/like-post', async (req, res) => {
+    const { postId, userId } = req.body;
+
+    try {
+        const post = await postsCol.findById(postId);
+
+        if (!post) {
+            return res.status(404).send({ Status: 'error', data: 'Post not found' });
+        }
+
+        // Check if the user has already liked the post
+        if (post.likes.includes(userId)) {
+            // User already liked this post, so unlike it
+            post.likes = post.likes.filter(id => id !== userId);
+        } else {
+            // Add the user's ID to the likes array
+            post.likes.push(userId);
+        }
+
+        await post.save();
+        res.status(200).send({ Status: 'success', data: post });
+    } catch (e) {
+        res.status(500).send({ Status: 'error', data: e.message });
+    }
+});
+
 app.listen(8000, () => {
     console.log('Server running on port 8000');
 });

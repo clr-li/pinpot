@@ -45,4 +45,32 @@
     color: #333;
     white-space: pre-wrap; /* Handle line breaks */
     text-align: left;
+    padding: 3px;
+}
+
+/* Likes */
+.post-likes {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.like-icon {
+    cursor: pointer;
+    color: #555; /* Default color for heart icon */
+    transition: color 0.3s;
+}
+
+.like-icon.liked {
+    color: #e0245e; /* Color when liked */
+}
+
+.like-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    padding: 3px;
 }

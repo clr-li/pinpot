@@ -5,13 +5,14 @@ import axios from 'axios';
 import '../styles/posts.css';
 import '../styles/popup.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
 import { postVisibility } from '../enum';
 
 function ExplorePosts(props) {
     const [posts, setPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState(null);
+    const [likedPosts, setLikedPosts] = useState(new Set()); // Track liked posts
     const { selectPosition, uids } = props;
     const location = useLocation();
 
@@ -48,7 +49,15 @@ function ExplorePosts(props) {
                         });
                     }
                     if (res.status === 201) {
-                        setPosts(res.data.data);
+                        const postsData = res.data.data;
+                        setPosts(postsData);
+                        // Initialize likedPosts set based on response data
+                        const likedPostsSet = new Set(
+                            postsData
+                                .filter(post => post.likes.includes(userInfo.id))
+                                .map(post => post._id),
+                        );
+                        setLikedPosts(likedPostsSet);
                     } else {
                         console.log('Failed to fetch posts');
                     }
@@ -78,6 +87,51 @@ function ExplorePosts(props) {
         setSelectedPost(null);
     };
 
+    const handleLikeClick = async postId => {
+        try {
+            const userInfo = getUserFromToken();
+            if (!userInfo) {
+                return;
+            }
+
+            const res = await axios.post('http://localhost:8000/like-post', {
+                postId: postId,
+                userId: userInfo.id,
+            });
+
+            if (res.status === 200) {
+                // Update the posts state to reflect the new like status
+                setPosts(prevPosts =>
+                    prevPosts.map(post => {
+                        if (post._id === postId) {
+                            const isLiked = post.likes.includes(userInfo.id);
+                            const updatedLikes = isLiked
+                                ? post.likes.filter(id => id !== userInfo.id)
+                                : [...post.likes, userInfo.id];
+                            return { ...post, likes: updatedLikes };
+                        }
+                        return post;
+                    }),
+                );
+
+                // Toggle like status in the likedPosts set
+                setLikedPosts(prev => {
+                    const newLikedPosts = new Set(prev);
+                    if (newLikedPosts.has(postId)) {
+                        newLikedPosts.delete(postId);
+                    } else {
+                        newLikedPosts.add(postId);
+                    }
+                    return newLikedPosts;
+                });
+            } else {
+                console.log('Failed to update like status');
+            }
+        } catch (error) {
+            console.log('Error liking post:', error);
+        }
+    };
+
     return (
         <div className="posts-grid">
             {posts.map((data, index) => (
@@ -92,6 +146,15 @@ function ExplorePosts(props) {
                     </div>
                     <div className="post-date">{formatDate(data.uploadDate)}</div>
                     {data.text && <div className="post-caption">{truncateCaption(data.text)}</div>}
+                    <div className="post-likes">
+                        <button className="like-button" onClick={() => handleLikeClick(data._id)}>
+                            <FontAwesomeIcon
+                                icon={faHeart}
+                                className={`like-icon ${likedPosts.has(data._id) ? 'liked' : ''}`}
+                            />
+                        </button>
+                        {data.likes.length > 0 && <span>{data.likes.length} Likes</span>}
+                    </div>
                 </div>
             ))}
 

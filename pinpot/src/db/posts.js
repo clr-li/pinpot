@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const mongoPassword = process.env.MONGODB_PASSWORD;
 const uri = `mongodb+srv://pinpot:${mongoPassword}@pinpot.ctzlg.mongodb.net/pinpot?retryWrites=true&w=majority&appName=PinPot`;
+
 mongoose
     .connect(uri)
     .then(() => {})
@@ -39,6 +40,10 @@ const postSchema = new mongoose.Schema(
         takenDate: {
             type: Date,
             required: false,
+        },
+        likes: {
+            type: [String], // Array of user IDs who liked the post
+            default: [], // Initialize as an empty array
         },
     },
     {
