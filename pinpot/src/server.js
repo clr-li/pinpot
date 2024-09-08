@@ -125,6 +125,43 @@ app.get('/get-posts-by-loc', async (req, res) => {
     }
 });
 
+// Get uid by username
+app.get('/get-uid', async (req, res) => {
+    const { username } = req.query;
+
+    try {
+        await userCol.findOne({ username: username }).then(data => {
+            res.send({ status: 201, data: data });
+        });
+    } catch (e) {
+        res.send({ Status: 'error', data: e });
+    }
+});
+
+// Get posts by username and post visibility
+app.get('/get-posts-by-visibility', async (req, res) => {
+    const { username, visibility } = req.query;
+
+    // Get uid
+    let uid = null;
+    try {
+        await userCol.findOne({ username: username }).then(data => {
+            uid = data.id;
+            console.log('uid', uid);
+        });
+    } catch (e) {
+        res.send({ Status: 'error', data: e });
+    }
+
+    try {
+        await postsCol.find({ uid: uid, visibility: visibility }).then(data => {
+            res.send({ status: 201, data: data });
+        });
+    } catch (e) {
+        res.send({ Status: 'error', data: e });
+    }
+});
+
 // Get user by query
 app.get('/search-users', async (req, res) => {
     const { search, limit = 5 } = req.query;
@@ -158,14 +195,14 @@ app.post('/follow-user', async (req, res) => {
         const existingRelation = await followCol.findOne({ followerId, followedId: followedId });
 
         if (existingRelation) {
-            return res.send({ Status: 'error', data: 'Already following this user.' });
+            return res.send({ Status: 'error', data: 'Already following this user' });
         }
 
         // Create a new follow relationship
         const newRelation = new followCol({ followerId, followedId: followedId });
         await newRelation.save();
 
-        res.status(201).send({ Status: 'success', data: 'User followed successfully.' });
+        res.status(201).send({ Status: 'success', data: 'User followed successfully' });
     } catch (e) {
         res.send({ Status: 'error', data: e.message });
     }

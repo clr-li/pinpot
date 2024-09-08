@@ -3,6 +3,7 @@ import axios from 'axios';
 import '../styles/explore.css'; // Include any styles you need
 import { useNavigate } from 'react-router-dom';
 import { getUserFromToken } from '../auth';
+import SearchResults from './SearchResults'; // Import the new component
 
 function Explore() {
     const [user, setUser] = useState(null);
@@ -18,7 +19,7 @@ function Explore() {
         } catch (error) {
             history('/login.html');
         }
-    }, []);
+    }, [history]);
 
     const handleSearchChange = e => {
         setSearchTerm(e.target.value);
@@ -46,6 +47,10 @@ function Explore() {
 
     const handleFollowUser = async followedId => {
         try {
+            if (user.id === followedId) {
+                setMessage({ text: "Can't follow yourself", type: 'error' });
+                return;
+            }
             const res = await axios.post('http://localhost:8000/follow-user', {
                 followerId: user.id,
                 followedId,
@@ -57,7 +62,7 @@ function Explore() {
                 setMessage({ text: res.data.data, type: 'error' });
             }
         } catch (error) {
-            setMessage({ text: 'Error following user.', type: 'error' });
+            setMessage({ text: 'Error following user', type: 'error' });
         }
     };
 
@@ -74,17 +79,7 @@ function Explore() {
                 <button type="submit">Search</button>
             </form>
             {message && <div className={`message ${message.type}`}>{message.text}</div>}
-            <div className="search-results">
-                {searchResults.length !== 0 &&
-                    searchResults.map(user => (
-                        <div key={user._id} className="user-card">
-                            <div className="user-info">
-                                <h3>{user.username}</h3>
-                                <button onClick={() => handleFollowUser(user._id)}>Follow</button>
-                            </div>
-                        </div>
-                    ))}
-            </div>
+            <SearchResults searchResults={searchResults} handleFollowUser={handleFollowUser} />
         </div>
     );
 }
