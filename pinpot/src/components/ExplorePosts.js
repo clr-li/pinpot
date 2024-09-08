@@ -1,4 +1,3 @@
-// Filename - ExplorePosts.js
 import React, { useState, useEffect } from 'react';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
@@ -153,7 +152,9 @@ function ExplorePosts(props) {
                                 className={`like-icon ${likedPosts.has(data._id) ? 'liked' : ''}`}
                             />
                         </button>
-                        {data.likes.length > 0 && <span>{data.likes.length} Likes</span>}
+                        <span>
+                            {data.likes.length} {data.likes.length === 1 ? 'Like' : 'Likes'}
+                        </span>
                     </div>
                 </div>
             ))}

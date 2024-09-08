@@ -10,20 +10,15 @@
 .search-box-container {
     display: flex;
     align-items: center;
-    gap: 10px; /* Space between the input and button */
-    margin-bottom: 10px;
 }
 
 .search-input {
     flex: 1;
-    width: 100%;
+    width: calc(100% - 85px);
     height: 38px; /* Increase this value to make the input taller */
     padding: 10px; /* Add padding to ensure text doesn't touch edges */
     box-sizing: border-box; /* Ensure padding is included in height */
-}
-
-.search-button {
-    padding: 0.5rem 1rem;
+    margin-right: 10px;
 }
 
 .list-item {
@@ -40,20 +35,22 @@
 }
 
 .search-form {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    display: inline;
+    align-items: center;
+    width: 100%;
 }
 
-.search-form input {
+.search-input {
     flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    height: 38px; /* Match the button height */
+    padding: 10px; /* Ensure text doesn't touch edges */
+    box-sizing: border-box; /* Ensure padding is included in height */
+    border: 1px solid #ddd; /* Add border for consistency */
+    border-radius: 5px; /* Rounded corners for consistency */
 }
 
-.search-form button {
-    padding: 10px 20px;
+.search-button {
+    padding: 8px 12px;
     border: none;
     background: #007bff;
     color: white;

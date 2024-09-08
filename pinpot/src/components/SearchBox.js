@@ -1,6 +1,5 @@
 // Filename - SearchBox.js
 import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -15,43 +14,42 @@ function SearchBox(props) {
     const [searchText, setSearchText] = useState('');
     const [listPlace, setListPlace] = useState([]);
 
+    const handleSearchSubmit = e => {
+        e.preventDefault();
+        // Search
+        const params = {
+            q: searchText,
+            format: 'json',
+            addressdetails: 1,
+            polygon_geojson: 0,
+        };
+        const queryString = new URLSearchParams(params).toString();
+        const requestOptions = {
+            method: 'GET',
+            redirect: 'follow',
+        };
+        fetch(`${NOMINATIM_BASE_URL}${queryString}`, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                setListPlace(JSON.parse(result));
+            })
+            .catch(err => console.log('err: ', err));
+    };
+
     return (
         <div className="search-box-wrapper">
             <div className="search-box-container">
-                <input
-                    className="search-input"
-                    value={searchText}
-                    onChange={event => {
-                        setSearchText(event.target.value);
-                    }}
-                />
-                <Button
-                    className="search-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                        // Search
-                        const params = {
-                            q: searchText,
-                            format: 'json',
-                            addressdetails: 1,
-                            polygon_geojson: 0,
-                        };
-                        const queryString = new URLSearchParams(params).toString();
-                        const requestOptions = {
-                            method: 'GET',
-                            redirect: 'follow',
-                        };
-                        fetch(`${NOMINATIM_BASE_URL}${queryString}`, requestOptions)
-                            .then(response => response.text())
-                            .then(result => {
-                                setListPlace(JSON.parse(result));
-                            })
-                            .catch(err => console.log('err: ', err));
-                    }}
-                >
-                    Search
-                </Button>
+                <form onSubmit={handleSearchSubmit} className="search-form">
+                    <input
+                        className="search-input"
+                        placeholder="Enter location name"
+                        value={searchText}
+                        onChange={event => setSearchText(event.target.value)}
+                    />
+                    <button type="submit" className="search-button">
+                        Search
+                    </button>
+                </form>
             </div>
             {listPlace.length > 0 && (
                 <List component="nav" aria-label="search results">

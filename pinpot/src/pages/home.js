@@ -16,6 +16,7 @@ function HomePage() {
                     <Maps selectPosition={selectPosition} />
                 </div>
                 <div style={{ width: '50vw' }}>
+                    <h1>PinPot Top Posts</h1>
                     <SearchBox
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}
