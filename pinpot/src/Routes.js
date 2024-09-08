@@ -4,7 +4,7 @@ import LoginPage from './pages/login';
 import SignupPage from './pages/signup';
 import MapPage from './pages/map';
 import Upload from './pages/post';
-import ExplorePage from './pages/explore';
+import SearchPage from './pages/search';
 
 export const Routers = () => {
     return (
@@ -15,7 +15,7 @@ export const Routers = () => {
                 <Route path="/signup.html" element={<SignupPage />} />
                 <Route path="/post.html" element={<Upload />} />
                 <Route path="/login.html" element={<LoginPage />} />
-                <Route path="/explore.html" element={<ExplorePage />} />
+                <Route path="/search.html" element={<SearchPage />} />
             </Routes>
         </Router>
     );

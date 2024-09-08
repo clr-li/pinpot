@@ -1,3 +1,4 @@
+// Filename - Navbar.js
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -10,7 +11,7 @@ function MainNavbar() {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="/explore.html">Explore</Nav.Link>
+                        <Nav.Link href="/search.html">Search</Nav.Link>
                         <Nav.Link href="/map.html">Map</Nav.Link>
                         <Nav.Link href="/post.html">Post</Nav.Link>
                     </Nav>

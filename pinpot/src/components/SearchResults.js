@@ -1,7 +1,8 @@
+// Filename - SearchResults.js
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import '../styles/explore.css'; // Include any styles you need
+import '../styles/search.css'; // Include any styles you need
 
 const SearchResults = ({ searchResults, handleFollowUser }) => {
     return (

@@ -1,3 +1,4 @@
+// Filename - posts.js
 const mongoose = require('mongoose');
 require('dotenv').config();
 const mongoPassword = process.env.MONGODB_PASSWORD;
@@ -12,10 +13,6 @@ mongoose
 const postSchema = new mongoose.Schema(
     {
         uid: {
-            type: String,
-            required: true,
-        },
-        postType: {
             type: String,
             required: true,
         },

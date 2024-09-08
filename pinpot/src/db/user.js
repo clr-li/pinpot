@@ -1,3 +1,4 @@
+// Filename - user.js
 const mongoose = require('mongoose');
 require('dotenv').config();
 const mongoPassword = process.env.MONGODB_PASSWORD;

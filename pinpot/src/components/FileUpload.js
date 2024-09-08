@@ -1,4 +1,4 @@
-// Filename: FileUploader.js
+// Filename: FileUpload.js
 import React, { useState, useEffect } from 'react';
 import PopupMessage from './PopupMessage';
 import { getUserFromToken } from '../auth';
@@ -109,7 +109,6 @@ function FileUploader(props) {
         setPostImage({
             img: image,
             uid: user.id,
-            postType: 'image',
             text: '',
             location: selectPosition,
             visibility: 'public',

@@ -1,3 +1,4 @@
+// Filename - post.js
 import React, { useState } from 'react';
 import Maps from '../components/Maps';
 import SearchBox from '../components/SearchBox';

@@ -82,12 +82,11 @@ app.get('/protected', authenticateToken, (req, res) => {
 
 // Upload image
 app.post('/upload-post', async (req, res) => {
-    const { uid, postType, img, text, location, visibility, uploadDate, takenDate } = req.body;
+    const { uid, img, text, location, visibility, uploadDate, takenDate } = req.body;
 
     try {
         await postsCol.create({
             uid,
-            postType,
             img,
             text,
             location,

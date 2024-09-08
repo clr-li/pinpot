@@ -1,11 +1,12 @@
+// Filename - Search.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/explore.css'; // Include any styles you need
+import '../styles/search.css'; // Include any styles you need
 import { useNavigate } from 'react-router-dom';
 import { getUserFromToken } from '../auth';
 import SearchResults from './SearchResults'; // Import the new component
 
-function Explore() {
+function Search() {
     const [user, setUser] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -67,8 +68,8 @@ function Explore() {
     };
 
     return (
-        <div className="explore-container">
-            <h1>Explore Users</h1>
+        <div className="search-container">
+            <h1>Search Users</h1>
             <form onSubmit={handleSearchSubmit} className="search-form">
                 <input
                     type="text"
@@ -84,4 +85,4 @@ function Explore() {
     );
 }
 
-export default Explore;
+export default Search;

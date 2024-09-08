@@ -1,3 +1,4 @@
+// Filename - map.js
 import React, { useState, useEffect } from 'react';
 import '../index.css';
 import Navbar from '../components/Navbar';
@@ -5,15 +6,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBox from '../components/SearchBox';
 import MyPosts from '../components/MyPosts';
 import Maps from '../components/Maps';
+import ViewTypes from '../components/ViewTypes'; // Import ViewTypes
 import { useNavigate, useLocation } from 'react-router-dom';
 import UserProfile from '../components/UserData';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
-import { postVisibility } from '../enum';
 
 function MapPage() {
     const [locations, setLocations] = useState([]);
     const [selectPosition, setSelectPosition] = useState(null);
+    const [visibilityFilter, setVisibilityFilter] = useState({
+        public: true,
+        private: false,
+        friendsOnly: false,
+    });
     const history = useNavigate();
     const location = useLocation();
 
@@ -31,15 +37,17 @@ function MapPage() {
                 const username = params.get('username');
                 let res = null;
 
+                const visibilityArray = Object.keys(visibilityFilter).filter(
+                    key => visibilityFilter[key],
+                );
+
                 if (username) {
-                    // Fetch user information based on the username from the URL
-                    const visibility = postVisibility.PUBLIC;
                     res = await axios.get('http://localhost:8000/get-posts-by-visibility-loc', {
-                        params: { username, visibility },
+                        params: { username, visibility: visibilityArray },
                     });
                 } else {
                     res = await axios.get('http://localhost:8000/get-post', {
-                        params: { uid: userInfo.id },
+                        params: { uid: userInfo.id, visibility: visibilityArray },
                     });
                 }
 
@@ -58,10 +66,14 @@ function MapPage() {
         }
 
         fetchData();
-    }, [location.search, history]);
+    }, [location.search, history, visibilityFilter]);
 
     const handleMarkerClick = location => {
         setSelectPosition(location);
+    };
+
+    const handleVisibilityChange = newSelection => {
+        setVisibilityFilter(newSelection);
     };
 
     return (
@@ -77,6 +89,7 @@ function MapPage() {
                 </div>
                 <div style={{ width: '50vw', height: '100vh' }}>
                     <UserProfile />
+                    <ViewTypes onChange={handleVisibilityChange} /> {/* Add ViewTypes */}
                     <SearchBox
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}

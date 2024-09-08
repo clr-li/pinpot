@@ -1,3 +1,4 @@
+// Filename - UserData.js
 import React, { useState, useEffect } from 'react';
 import { getUserFromToken } from '../auth';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +26,7 @@ function UserProfile() {
         <div>
             {user ? (
                 <div>
-                    <h1>Welcome, {user.username}</h1>
+                    <h1 style={{ margin: '0px 5px' }}>Welcome, {user.username}</h1>
                 </div>
             ) : (
                 <p>Loading...</p>

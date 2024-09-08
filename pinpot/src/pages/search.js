@@ -1,15 +1,15 @@
-// Filename - explore.js
+// Filename - search.js
 import React from 'react';
 import Navbar from '../components/Navbar';
-import Explore from '../components/Explore';
+import Search from '../components/Search';
 
-function ExplorePage() {
+function SearchPage() {
     return (
         <React.StrictMode>
             <Navbar></Navbar>
-            <Explore />
+            <Search />
         </React.StrictMode>
     );
 }
 
-export default ExplorePage;
+export default SearchPage;

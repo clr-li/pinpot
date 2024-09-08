@@ -35,7 +35,6 @@ function PostDetails(props) {
 
         const postData = {
             uid: user.id, // Use the user ID from the token
-            postType: postImage.postType,
             img: postImage.img,
             location: postImage.location,
             visibility,
