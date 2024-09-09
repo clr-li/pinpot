@@ -49,7 +49,8 @@ function ExplorePosts(props) {
                         });
                     }
                     if (res.status === 201) {
-                        const postsData = res.data.data;
+                        const postsData = res.data.posts;
+                        postsData.map(post => (post['username'] = res.data.users[post.uid]));
                         setPosts(postsData);
                         // Initialize likedPosts set based on response data
                         const likedPostsSet = new Set(
@@ -144,7 +145,9 @@ function ExplorePosts(props) {
                             onClick={() => handleImageClick(data)}
                         />
                     </div>
-                    <div className="post-date">{formatDate(data.uploadDate)}</div>
+                    <div className="post-date">
+                        {formatDate(data.uploadDate)} @{data.username}
+                    </div>
                     {data.text && <div className="post-caption">{truncateCaption(data.text)}</div>}
                     <div className="post-likes">
                         <button className="like-button" onClick={() => handleLikeClick(data._id)}>
@@ -164,6 +167,9 @@ function ExplorePosts(props) {
                 <div className="popup-overlay" onClick={closePopup}>
                     <div className="popup-content" onClick={e => e.stopPropagation()}>
                         <img className="popup-img" src={selectedPost.img} alt="Selected Post" />
+                        <div className="post-date">
+                            {formatDate(selectedPost.uploadDate)} @{selectedPost.username}
+                        </div>
                         <div className="popup-caption">{selectedPost.text}</div>
                         <button className="close-popup" onClick={closePopup}>
                             <FontAwesomeIcon icon={faCircleXmark} />

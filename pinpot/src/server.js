@@ -248,7 +248,7 @@ app.get('/get-posts-by-uids', async (req, res) => {
     }
 });
 
-// Get posts by a list of uids, location, and visibility
+// Get posts and usernames by a list of uids, location, and visibility
 app.get('/get-posts-by-uids-loc', async (req, res) => {
     const { uids, lat, lon, visibility } = req.query;
 
@@ -259,7 +259,20 @@ app.get('/get-posts-by-uids-loc', async (req, res) => {
             'location.lon': lon,
             visibility: visibility,
         });
-        res.status(201).send({ Status: 'success', data: posts });
+
+        const postUids = posts.map(post => post.uid);
+
+        const users = await userCol.find({
+            _id: { $in: postUids },
+        });
+
+        // Transform users array into a map from id to username
+        const userMap = users.reduce((acc, user) => {
+            acc[user._id.toString()] = user.username;
+            return acc;
+        }, {});
+
+        res.status(201).send({ Status: 'success', posts: posts, users: userMap });
     } catch (e) {
         res.send({ Status: 'error', data: e.message });
     }
