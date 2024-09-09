@@ -1,10 +1,5 @@
 // Filename - SearchBox.js
 import React, { useState } from 'react';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import '../styles/search.css';
 
 const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org/search?';
@@ -52,30 +47,21 @@ function SearchBox(props) {
                 </form>
             </div>
             {listPlace.length > 0 && (
-                <List component="nav" aria-label="search results">
+                <ul className="search-results-list">
                     {listPlace.map(item => (
-                        <div key={item?.place_id}>
-                            <ListItem
-                                button
-                                onClick={() => {
-                                    setSelectPosition(item);
-                                    setListPlace([]); // Clear the list to hide it
-                                }}
-                                className="list-item"
-                            >
-                                <ListItemIcon>
-                                    <img
-                                        src="./marker.png"
-                                        alt="Placeholder"
-                                        className="marker-icon"
-                                    />
-                                </ListItemIcon>
-                                <ListItemText primary={item?.display_name} />
-                            </ListItem>
-                            <Divider />
-                        </div>
+                        <li
+                            key={item?.place_id}
+                            onClick={() => {
+                                setSelectPosition(item);
+                                setListPlace([]); // Clear the list to hide it
+                            }}
+                            className="list-item"
+                        >
+                            <img src="./marker.png" alt="Marker icon" className="marker-icon" />
+                            <span>{item?.display_name}</span>
+                        </li>
                     ))}
-                </List>
+                </ul>
             )}
         </div>
     );
