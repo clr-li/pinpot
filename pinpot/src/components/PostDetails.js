@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PopupMessage from './PopupMessage';
 import '../styles/posts.css';
-import { postVisibility } from '../enum'; // Ensure this is properly imported
+import { postVisibility } from '../enum';
 import { getUserFromToken } from '../auth';
 
 function PostDetails(props) {
@@ -28,6 +28,9 @@ function PostDetails(props) {
     const handleSubmit = async e => {
         e.preventDefault();
 
+        // Reset the message state to ensure it displays for each submit
+        setMessage(null);
+
         if (!user) {
             setMessage({ text: 'User not authenticated.', type: 'error' });
             return;
@@ -45,16 +48,20 @@ function PostDetails(props) {
             postData.text = caption; // Only include caption if it's not empty
         }
 
-        try {
-            const response = await axios.post(`http://localhost:8000/upload-post/`, postData);
+        if (postData.visibility === postVisibility.PUBLIC && postImage.location.type === 'house') {
+            setMessage({ text: 'Cannot post public images of houses', type: 'error' });
+        } else {
+            try {
+                const response = await axios.post(`http://localhost:8000/upload-post/`, postData);
 
-            if (response.status === 201) {
-                setMessage({ text: 'Posted successfully!', type: 'success' });
-            } else {
-                setMessage({ text: 'Failed to post.', type: 'error' });
+                if (response.status === 201) {
+                    setMessage({ text: 'Posted successfully!', type: 'success' });
+                } else {
+                    setMessage({ text: 'Failed to post.', type: 'error' });
+                }
+            } catch (error) {
+                setMessage({ text: 'Error posting.', type: 'error' });
             }
-        } catch (error) {
-            setMessage({ text: 'Error posting.', type: 'error' });
         }
     };
 

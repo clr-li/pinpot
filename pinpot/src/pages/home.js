@@ -6,14 +6,24 @@ import SearchBox from '../components/SearchBox';
 import Maps from '../components/Maps';
 import TopPosts from '../components/TopPosts';
 import axios from 'axios';
+import { getUserFromToken } from '../auth';
 
 function HomePage() {
     const [locations, setLocations] = useState([]);
     const [selectPosition, setSelectPosition] = useState(null);
+    const [loggedIn, setLoggedIn] = useState(null);
 
     useEffect(() => {
         async function fetchTopPosts() {
             try {
+                let userInfo = null;
+                try {
+                    userInfo = getUserFromToken();
+                    setLoggedIn(userInfo);
+                } catch {
+                    console.log('Not logged in');
+                }
+
                 const res = await axios.get('http://localhost:8000/top-posts');
 
                 if (res.status === 200) {
@@ -49,7 +59,14 @@ function HomePage() {
                     />
                 </div>
                 <div className="half-container">
-                    <h1>PinPot Top Posts</h1>
+                    {loggedIn ? (
+                        <h1>PinPot Top Posts</h1>
+                    ) : (
+                        <div>
+                            <h1>PinPot</h1>
+                            <h4>Write reviews, organize your photos, or explore a new location!</h4>
+                        </div>
+                    )}
                     <SearchBox
                         selectPosition={selectPosition}
                         setSelectPosition={setSelectPosition}

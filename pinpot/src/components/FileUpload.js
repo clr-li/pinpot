@@ -4,6 +4,7 @@ import PopupMessage from './PopupMessage';
 import { getUserFromToken } from '../auth';
 import '../styles/uploader.css';
 import { useNavigate } from 'react-router-dom';
+import { postVisibility } from '../enum';
 
 function FileUploader(props) {
     const { selectPosition, setPostImage } = props;
@@ -28,6 +29,9 @@ function FileUploader(props) {
                 const base64Image = await fileToBase64(file);
                 const resizedImage = await resizeBase64Image(base64Image, file.size);
                 setImage(resizedImage);
+
+                // Automatically save the image and location after processing
+                saveImageToState(resizedImage);
             } catch (error) {
                 setMessage({ text: 'Error processing file.', type: 'error' });
                 setTimeout(() => setMessage(null), 3000);
@@ -92,7 +96,7 @@ function FileUploader(props) {
         });
     }
 
-    function saveImageToState() {
+    function saveImageToState(imageData = image) {
         if (!user) {
             setMessage({ text: 'User not authenticated.', type: 'error' });
             setTimeout(() => setMessage(null), 3000);
@@ -110,11 +114,11 @@ function FileUploader(props) {
 
         // Save the image to the parent component's state
         setPostImage({
-            img: image,
+            img: imageData,
             uid: user.id,
             text: '',
             location: selectPosition,
-            visibility: 'public',
+            visibility: postVisibility.PRIVATE,
             takenDate: Date.now(),
         });
 
@@ -127,8 +131,8 @@ function FileUploader(props) {
             <h2>Upload Image</h2>
             <input type="file" accept="image/*" onChange={convertToBase64} />
             {image && <img src={image} alt="Preview" />}
-            <button class="save-image" onClick={saveImageToState}>
-                Save Image
+            <button className="save-image" onClick={saveImageToState}>
+                Save
             </button>
             {message && <PopupMessage message={message.text} type={message.type} />}
         </div>
