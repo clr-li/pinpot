@@ -6,6 +6,7 @@ import axios from 'axios';
 import { getUserFromToken } from '../auth';
 import '../styles/search.css'; // Include any styles you need
 import { useNavigate } from 'react-router-dom';
+import { HOSTNAME } from '../constants';
 
 const SearchResults = ({ searchResults, handleFollowUser }) => {
     const [followedUsers, setFollowedUsers] = useState([]);
@@ -26,7 +27,7 @@ const SearchResults = ({ searchResults, handleFollowUser }) => {
             await Promise.all(
                 searchResults.map(async user => {
                     try {
-                        const response = await axios.get('http://localhost:8000/follower-count', {
+                        const response = await axios.get(`${HOSTNAME}/follower-count`, {
                             params: {
                                 uid: user._id,
                             },

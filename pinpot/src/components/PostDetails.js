@@ -5,6 +5,7 @@ import PopupMessage from './PopupMessage';
 import '../styles/posts.css';
 import { postVisibility } from '../enum';
 import { getUserFromToken } from '../auth';
+import { HOSTNAME } from '../constants';
 
 function PostDetails(props) {
     const { postImage } = props;
@@ -52,7 +53,7 @@ function PostDetails(props) {
             setMessage({ text: 'Cannot post public images of houses', type: 'error' });
         } else {
             try {
-                const response = await axios.post(`http://localhost:8000/upload-post/`, postData);
+                const response = await axios.post(`${HOSTNAME}/upload-post/`, postData);
 
                 if (response.status === 201) {
                     setMessage({ text: 'Posted successfully!', type: 'success' });

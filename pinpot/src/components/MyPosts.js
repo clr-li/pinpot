@@ -6,6 +6,7 @@ import '../styles/popup.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { postVisibility } from '../enum';
+import { HOSTNAME } from '../constants';
 
 function MyPosts(props) {
     const [posts, setPosts] = useState([]);
@@ -18,7 +19,7 @@ function MyPosts(props) {
                 const userInfo = getUserFromToken();
 
                 if (selectPosition) {
-                    const res = await axios.get('http://localhost:8000/get-posts-by-loc', {
+                    const res = await axios.get(`${HOSTNAME}/get-posts-by-loc`, {
                         params: {
                             uid: userInfo.id,
                             lat: selectPosition.lat,
@@ -72,7 +73,7 @@ function MyPosts(props) {
 
     const deletePost = async () => {
         try {
-            const response = await axios.delete('http://localhost:8000/delete-post', {
+            const response = await axios.delete(`${HOSTNAME}/delete-post`, {
                 params: { postId: selectedPost._id },
             });
 

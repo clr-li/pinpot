@@ -14,6 +14,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+const port = 8080;
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 //TODO: HIGH PRIORITY - require authentication for endpoints
@@ -34,12 +36,13 @@ app.post('/login', async (req, res) => {
 
         if (user && (await bcrypt.compare(password, user.password))) {
             const token = generateToken(user);
-            res.status(201).json({ token });
+            console.log('token', token);
+            res.status(200).json({ token });
         } else {
-            res.send('Invalid username or password');
+            res.status(400).json({ error: 'Invalid username or password' });
         }
     } catch (e) {
-        res.send('Error occurred');
+        res.status(500).json({ error: e });
     }
 });
 
@@ -336,7 +339,7 @@ app.get('/top-posts', async (req, res) => {
 
         res.status(200).send({ Status: 'success', data: posts });
     } catch (e) {
-        res.status(500).send({ Status: 'error', data: e.message });
+        res.send({ Status: 'error', data: e.message });
     }
 });
 
@@ -385,6 +388,6 @@ app.get('/follower-count', async (req, res) => {
     }
 });
 
-app.listen(8000, () => {
-    console.log('Server running on port 8000');
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });

@@ -7,6 +7,7 @@ import '../styles/popup.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { postVisibility } from '../enum';
+import { HOSTNAME } from '../constants';
 
 function TopPosts({ selectPosition }) {
     const [posts, setPosts] = useState([]);
@@ -24,7 +25,7 @@ function TopPosts({ selectPosition }) {
                 }
 
                 if (selectPosition) {
-                    const res = await axios.get('http://localhost:8000/top-posts-by-loc', {
+                    const res = await axios.get(`${HOSTNAME}/top-posts-by-loc`, {
                         params: {
                             lat: selectPosition.lat,
                             lon: selectPosition.lon,
@@ -71,7 +72,7 @@ function TopPosts({ selectPosition }) {
         try {
             const userInfo = getUserFromToken();
 
-            const res = await axios.post('http://localhost:8000/like-post', {
+            const res = await axios.post(`${HOSTNAME}/like-post`, {
                 postId: postId,
                 userId: userInfo.id,
             });

@@ -2,7 +2,9 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 const mongoPassword = process.env.MONGODB_PASSWORD;
-const uri = `mongodb+srv://pinpot:${mongoPassword}@pinpot.ctzlg.mongodb.net/pinpot?retryWrites=true&w=majority&appName=PinPot`;
+// const uri = `mongodb+srv://pinpot:${mongoPassword}@pinpot.ctzlg.mongodb.net/pinpot?retryWrites=true&w=majority&appName=PinPot`;
+const uri = `mongodb+srv://pinpots:${mongoPassword}@pinpotscluster0.ch5rq.mongodb.net/pinpots-db?retryWrites=true&w=majority&appName=PinpotsCluster0`;
+
 mongoose
     .connect(uri)
     .then(() => {})

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { faCheck, faTimes, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { HOSTNAME } from '../constants';
 
 const USER_REGEX = /^[a-z][a-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{8,24}$/;
@@ -59,7 +60,7 @@ function SignupForm() {
 
         try {
             await axios
-                .post('http://localhost:8000/signup', {
+                .post(`${HOSTNAME}/signup`, {
                     username: username,
                     email,
                     password: pwd,

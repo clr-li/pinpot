@@ -7,6 +7,7 @@ import Maps from '../components/Maps';
 import TopPosts from '../components/TopPosts';
 import axios from 'axios';
 import { getUserFromToken } from '../auth';
+import { HOSTNAME } from '../constants';
 
 function HomePage() {
     const [locations, setLocations] = useState([]);
@@ -21,10 +22,10 @@ function HomePage() {
                     userInfo = getUserFromToken();
                     setLoggedIn(userInfo);
                 } catch {
-                    console.log('Not logged in');
+                    console.log('Not logged in home');
                 }
 
-                const res = await axios.get('http://localhost:8000/top-posts');
+                const res = await axios.get(`${HOSTNAME}/top-posts`);
 
                 if (res.status === 200) {
                     let extractedLocations = res.data.data.map(post => post.location);

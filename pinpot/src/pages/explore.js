@@ -13,6 +13,7 @@ import { useLocation } from 'react-router-dom';
 import ExplorePosts from '../components/ExplorePosts';
 import { postVisibility } from '../enum';
 import UserDetails from '../components/UserDetails';
+import { HOSTNAME } from '../constants';
 
 function ExplorePage() {
     const [locations, setLocations] = useState([]);
@@ -38,11 +39,11 @@ function ExplorePage() {
 
                 if (username) {
                     setUserState(username);
-                    res = await axios.get('http://localhost:8000/get-posts-by-username-loc', {
+                    res = await axios.get(`${HOSTNAME}/get-posts-by-username-loc`, {
                         params: { username, visibility: postVisibility.PUBLIC },
                     });
                 } else {
-                    const followRes = await axios.get('http://localhost:8000/get-followed-uids', {
+                    const followRes = await axios.get(`${HOSTNAME}/get-followed-uids`, {
                         params: {
                             uid: userInfo.id,
                         },
@@ -50,7 +51,7 @@ function ExplorePage() {
                     const followedIds = followRes.data.data.map(obj => obj.followedId);
                     setUids(followedIds);
 
-                    res = await axios.get('http://localhost:8000/get-posts-by-uids', {
+                    res = await axios.get(`${HOSTNAME}/get-posts-by-uids`, {
                         params: { uids: followedIds, visibility: postVisibility.PUBLIC },
                     });
                 }

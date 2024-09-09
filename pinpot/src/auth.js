@@ -1,11 +1,11 @@
 // Filename - auth.js
 import { jwtDecode } from 'jwt-decode';
-const API_URL = 'http://localhost:8000';
+import { HOSTNAME } from './constants';
 
 export async function fetchProtectedData() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_URL}/protected`, {
+        const response = await fetch(`${HOSTNAME}/protected`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

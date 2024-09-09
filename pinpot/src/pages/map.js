@@ -9,6 +9,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import UserProfile from '../components/UserData';
 import { getUserFromToken } from '../auth';
 import axios from 'axios';
+import { HOSTNAME } from '../constants';
 
 function MapPage() {
     const [locations, setLocations] = useState([]);
@@ -25,7 +26,7 @@ function MapPage() {
         }
         async function fetchData() {
             try {
-                const res = await axios.get('http://localhost:8000/get-post', {
+                const res = await axios.get(`${HOSTNAME}/get-post`, {
                     params: { uid: userInfo.id },
                 });
 

@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
 import { postVisibility } from '../enum';
+import { HOSTNAME } from '../constants';
 
 function ExplorePosts(props) {
     const [posts, setPosts] = useState([]);
@@ -29,7 +30,7 @@ function ExplorePosts(props) {
                     let res = null;
                     let postsData = null;
                     if (username) {
-                        res = await axios.get('http://localhost:8000/get-posts-by-username-loc', {
+                        res = await axios.get(`${HOSTNAME}/get-posts-by-username-loc`, {
                             params: {
                                 username: username,
                                 lat: selectPosition.lat,
@@ -39,7 +40,7 @@ function ExplorePosts(props) {
                         });
                         postsData = res.data.data;
                     } else {
-                        res = await axios.get('http://localhost:8000/get-posts-by-uids-loc', {
+                        res = await axios.get(`${HOSTNAME}/get-posts-by-uids-loc`, {
                             params: {
                                 uids: uids,
                                 lat: selectPosition.lat,
@@ -92,7 +93,7 @@ function ExplorePosts(props) {
         try {
             const userInfo = getUserFromToken();
 
-            const res = await axios.post('http://localhost:8000/like-post', {
+            const res = await axios.post(`${HOSTNAME}/like-post`, {
                 postId: postId,
                 userId: userInfo.id,
             });

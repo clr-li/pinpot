@@ -5,6 +5,7 @@ import '../styles/search.css'; // Include any styles you need
 import { useNavigate } from 'react-router-dom';
 import { getUserFromToken } from '../auth';
 import SearchResults from './SearchResults'; // Import the new component
+import { HOSTNAME } from '../constants';
 
 function Search() {
     const [user, setUser] = useState(null);
@@ -30,7 +31,7 @@ function Search() {
         e.preventDefault();
 
         try {
-            const response = await axios.get('http://localhost:8000/search-users', {
+            const response = await axios.get(`${HOSTNAME}/search-users`, {
                 params: {
                     search: searchTerm,
                 },
@@ -52,7 +53,7 @@ function Search() {
                 setMessage({ text: "Can't follow yourself", type: 'error' });
                 return;
             }
-            const res = await axios.post('http://localhost:8000/follow-user', {
+            const res = await axios.post(`${HOSTNAME}/follow-user`, {
                 followerId: user.id,
                 followedId,
             });
@@ -62,7 +63,7 @@ function Search() {
                 // Update the follower count in search results
                 updateFollowerCount(followedId, 1);
             } else {
-                const unfollowRes = await axios.post('http://localhost:8000/unfollow-user', {
+                const unfollowRes = await axios.post(`${HOSTNAME}/unfollow-user`, {
                     followerId: user.id,
                     followedId,
                 });

@@ -1,7 +1,7 @@
-// Filename - Login.js
 import { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/form.css';
+import { HOSTNAME } from '../constants';
 
 function LoginForm() {
     const userRef = useRef();
@@ -24,28 +24,36 @@ function LoginForm() {
         e.preventDefault();
 
         try {
-            await axios
-                .post('http://localhost:8000/login', {
-                    username: username,
-                    password: pwd,
-                })
-                .then(res => {
-                    if (res.status === 201) {
-                        localStorage.setItem('token', res.data.token);
-                        setUser('');
-                        setPwd('');
-                        setSuccess(true);
-                    } else {
-                        setErrMsg(res.data);
-                    }
-                })
-                .catch(e => {
-                    setErrMsg('Unable to login');
-                    setUser('');
-                    setPwd('');
-                });
-        } catch (e) {
-            setErrMsg(e.response.data);
+            const res = await axios.post(`${HOSTNAME}/login`, {
+                username: username,
+                password: pwd,
+            });
+
+            if (res.status === 200) {
+                localStorage.setItem('token', res.data.token);
+                setUser('');
+                setPwd('');
+                setSuccess(true);
+            } else {
+                setErrMsg('Login failed. Please try again.');
+            }
+        } catch (error) {
+            if (error.response) {
+                // If the server responded with a status other than 2xx
+                if (error.response.status === 400) {
+                    setErrMsg('Invalid username or password.');
+                } else if (error.response.status === 500) {
+                    setErrMsg('Server error. Please try again later.');
+                } else {
+                    setErrMsg('An unexpected error occurred.');
+                }
+            } else {
+                // If the request never left (network error)
+                setErrMsg(
+                    'Unable to connect to the server. Please check your internet connection.',
+                );
+            }
+            errRef.current.focus(); // Focus on the error message
         }
     }
 
