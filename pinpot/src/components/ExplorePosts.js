@@ -19,16 +19,15 @@ function ExplorePosts(props) {
     useEffect(() => {
         async function fetchData() {
             try {
+                // TODO: remove all try catch blocks and instead use response status
                 const userInfo = getUserFromToken();
-                if (!userInfo) {
-                    return;
-                }
 
                 const params = new URLSearchParams(location.search);
                 const username = params.get('username');
-                let res = null;
 
                 if (selectPosition) {
+                    let res = null;
+                    let postsData = null;
                     if (username) {
                         res = await axios.get('http://localhost:8000/get-posts-by-username-loc', {
                             params: {
@@ -38,6 +37,7 @@ function ExplorePosts(props) {
                                 visibility: postVisibility.PUBLIC,
                             },
                         });
+                        postsData = res.data.data;
                     } else {
                         res = await axios.get('http://localhost:8000/get-posts-by-uids-loc', {
                             params: {
@@ -47,10 +47,10 @@ function ExplorePosts(props) {
                                 visibility: postVisibility.PUBLIC,
                             },
                         });
+                        postsData = res.data.posts;
+                        postsData.map(post => (post['username'] = res.data.users[post.uid]));
                     }
                     if (res.status === 201) {
-                        const postsData = res.data.posts;
-                        postsData.map(post => (post['username'] = res.data.users[post.uid]));
                         setPosts(postsData);
                         // Initialize likedPosts set based on response data
                         const likedPostsSet = new Set(
@@ -91,9 +91,6 @@ function ExplorePosts(props) {
     const handleLikeClick = async postId => {
         try {
             const userInfo = getUserFromToken();
-            if (!userInfo) {
-                return;
-            }
 
             const res = await axios.post('http://localhost:8000/like-post', {
                 postId: postId,

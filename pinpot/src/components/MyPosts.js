@@ -16,9 +16,6 @@ function MyPosts(props) {
         async function fetchData() {
             try {
                 const userInfo = getUserFromToken();
-                if (!userInfo) {
-                    return;
-                }
 
                 if (selectPosition) {
                     const res = await axios.get('http://localhost:8000/get-posts-by-loc', {

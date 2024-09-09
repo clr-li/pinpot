@@ -5,14 +5,21 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { getUserFromToken } from '../auth';
 import '../styles/search.css'; // Include any styles you need
+import { useNavigate } from 'react-router-dom';
 
 const SearchResults = ({ searchResults, handleFollowUser }) => {
     const [followedUsers, setFollowedUsers] = useState([]);
     const [userFollows, setUserFollows] = useState([]);
+    const history = useNavigate();
 
     useEffect(() => {
         const fetchFollowerCounts = async () => {
-            const userInfo = getUserFromToken();
+            let userInfo = null;
+            try {
+                userInfo = getUserFromToken();
+            } catch (error) {
+                history('/login.html');
+            }
             const followedArray = {};
             const doesUserFollow = {};
 

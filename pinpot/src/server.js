@@ -319,7 +319,7 @@ app.get('/top-posts', async (req, res) => {
     }
 });
 
-// Get all top posts by location
+// Get top posts and usernames by location
 app.get('/top-posts-by-loc', async (req, res) => {
     const { lat, lon } = req.query;
 
@@ -331,7 +331,19 @@ app.get('/top-posts-by-loc', async (req, res) => {
             $expr: { $gte: [{ $size: '$likes' }, TOP_POST_LIKES_THRESHOLD] },
         });
 
-        res.status(200).send({ Status: 'success', data: posts });
+        const postUids = posts.map(post => post.uid);
+
+        const users = await userCol.find({
+            _id: { $in: postUids },
+        });
+
+        // Transform users array into a map from id to username
+        const userMap = users.reduce((acc, user) => {
+            acc[user._id.toString()] = user.username;
+            return acc;
+        }, {});
+
+        res.status(200).send({ Status: 'success', posts: posts, users: userMap });
     } catch (e) {
         res.status(500).send({ Status: 'error', data: e.message });
     }

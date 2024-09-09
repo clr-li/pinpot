@@ -11,14 +11,16 @@ import { postVisibility } from '../enum';
 function TopPosts({ selectPosition }) {
     const [posts, setPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState(null);
-    const [likedPosts, setLikedPosts] = useState(new Set()); // Track liked posts
+    const [likedPosts, setLikedPosts] = useState(new Set());
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const userInfo = getUserFromToken();
-                if (!userInfo) {
-                    return;
+                let userInfo = null;
+                try {
+                    userInfo = getUserFromToken();
+                } catch {
+                    console.log('Not logged in');
                 }
 
                 if (selectPosition) {
@@ -31,16 +33,11 @@ function TopPosts({ selectPosition }) {
                     });
 
                     if (res.status === 200) {
-                        const postsData = res.data.data;
+                        const postsData = res.data.posts;
+                        if (userInfo) {
+                            postsData.map(post => (post['username'] = res.data.users[post.uid]));
+                        }
                         setPosts(postsData);
-
-                        // Initialize likedPosts set based on response data
-                        const likedPostsSet = new Set(
-                            postsData
-                                .filter(post => post.likes.includes(userInfo.id))
-                                .map(post => post._id),
-                        );
-                        setLikedPosts(likedPostsSet);
                     } else {
                         console.log('Failed to fetch top posts');
                     }
@@ -73,9 +70,6 @@ function TopPosts({ selectPosition }) {
     const handleLikeClick = async postId => {
         try {
             const userInfo = getUserFromToken();
-            if (!userInfo) {
-                return;
-            }
 
             const res = await axios.post('http://localhost:8000/like-post', {
                 postId: postId,
@@ -127,7 +121,10 @@ function TopPosts({ selectPosition }) {
                             onClick={() => handleImageClick(data)}
                         />
                     </div>
-                    <div className="post-date">{formatDate(data.uploadDate)}</div>
+                    <div className="post-date">
+                        {formatDate(data.uploadDate)}
+                        {data.username ? ` @${data.username}` : ''}
+                    </div>
                     {data.text && <div className="post-caption">{truncateCaption(data.text)}</div>}
                     <div className="post-likes">
                         <button className="like-button" onClick={() => handleLikeClick(data._id)}>
