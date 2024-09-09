@@ -74,3 +74,15 @@
     outline: none;
     padding: 3px;
 }
+
+/* Delete Posts */
+.delete-post {
+    background-color: #fff; /* White background */
+    border: none; /* Light gray border */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 14px;
+}
+
+.delete-post:hover {
+    color: #c82333; /* Darker red icon on hover */
+}

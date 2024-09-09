@@ -81,7 +81,7 @@ app.get('/protected', authenticateToken, (req, res) => {
     res.json('This is a protected route');
 });
 
-// Upload image
+// Upload post
 app.post('/upload-post', async (req, res) => {
     const { uid, img, text, location, visibility, uploadDate, takenDate } = req.body;
 
@@ -98,6 +98,27 @@ app.post('/upload-post', async (req, res) => {
         res.status(201).json('success');
     } catch (e) {
         res.send({ Status: 'error', data: e });
+    }
+});
+
+// Delete post
+app.delete('/delete-post/', async (req, res) => {
+    const { postId } = req.query; // Extract postId from URL parameters
+
+    try {
+        // Delete the post with the specified postId
+        const result = await postsCol.deleteOne({ _id: postId });
+
+        // Check if the post was found and deleted
+        if (result.deletedCount === 0) {
+            return res.status(404).send({ Status: 'error', data: 'Post not found' });
+        }
+
+        // Successfully deleted
+        res.status(200).send({ Status: 'success', data: 'Post deleted successfully' });
+    } catch (e) {
+        // Handle any errors
+        res.status(500).send({ Status: 'error', data: e.message });
     }
 });
 

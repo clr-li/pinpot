@@ -4,7 +4,7 @@ import axios from 'axios';
 import '../styles/posts.css';
 import '../styles/popup.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { postVisibility } from '../enum';
 
 function MyPosts(props) {
@@ -70,6 +70,23 @@ function MyPosts(props) {
         setSelectedPost(null);
     };
 
+    const deletePost = async () => {
+        try {
+            const response = await axios.delete('http://localhost:8000/delete-post', {
+                params: { postId: selectedPost._id },
+            });
+
+            if (response.status === 200) {
+                setPosts(posts.filter(post => post._id !== selectedPost._id));
+                setSelectedPost(null); // Close the popup
+            } else {
+                console.log('Failed to delete post', response.status);
+            }
+        } catch (error) {
+            console.log('Error deleting post:', error);
+        }
+    };
+
     return (
         <div className="posts-grid">
             {posts.map((data, index) => (
@@ -97,6 +114,11 @@ function MyPosts(props) {
                             <div>
                                 <strong>Visibility:</strong>{' '}
                                 {getVisibilityLabel(selectedPost.visibility)}
+                            </div>
+                            <div>
+                                <button className="delete-post" onClick={deletePost}>
+                                    <FontAwesomeIcon icon={faTrashCan} />
+                                </button>
                             </div>
                         </div>
                         <img className="popup-img" src={selectedPost.img} alt="Selected Post" />
