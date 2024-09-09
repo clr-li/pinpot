@@ -34,8 +34,6 @@ form {
     padding-bottom: 1rem;
 }
 
-input[type='text'],
-input[type='password'],
 button,
 textarea {
     font-family: 'Nunito', sans-serif;

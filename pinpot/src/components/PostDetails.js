@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PopupMessage from './PopupMessage';
 import '../styles/posts.css';
-import { postVisibility } from '../enum';
+import { postVisibility } from '../enum'; // Ensure this is properly imported
 import { getUserFromToken } from '../auth';
 
 function PostDetails(props) {
@@ -60,7 +60,7 @@ function PostDetails(props) {
 
     // Ensure postImage is set before rendering the form
     if (!postImage) {
-        return;
+        return null; // Return null instead of empty
     }
 
     return (
@@ -79,7 +79,9 @@ function PostDetails(props) {
                     <label htmlFor="visibility">Visibility:</label>
                     <select
                         id="visibility"
-                        value={visibility.toString()} // Convert Symbol to string for select value
+                        value={Object.keys(postVisibility).find(
+                            key => postVisibility[key] === visibility,
+                        )}
                         onChange={e => setVisibility(postVisibility[e.target.value])}
                     >
                         {Object.keys(postVisibility).map(key => (

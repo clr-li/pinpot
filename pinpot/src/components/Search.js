@@ -70,15 +70,20 @@ function Search() {
     return (
         <div className="search-container">
             <h1>Search Users</h1>
-            <form onSubmit={handleSearchSubmit} className="search-form">
-                <input
-                    type="text"
-                    placeholder="Search for users..."
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
-                <button type="submit">Search</button>
-            </form>
+            <div className="search-box-container">
+                <form onSubmit={handleSearchSubmit} className="search-form">
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="Search for users..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                    />
+                    <button type="submit" className="search-button">
+                        Search
+                    </button>
+                </form>
+            </div>
             {message && <div className={`message ${message.type}`}>{message.text}</div>}
             <SearchResults searchResults={searchResults} handleFollowUser={handleFollowUser} />
         </div>

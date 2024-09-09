@@ -1,6 +1,5 @@
 // Filename - map.js
 import React, { useState, useEffect } from 'react';
-import '../index.css';
 import Navbar from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBox from '../components/SearchBox';
@@ -55,14 +54,14 @@ function MapPage() {
         <React.StrictMode>
             <Navbar />
             <div className="half-half-containter">
-                <div style={{ width: '50vw', height: '100vh' }}>
+                <div className="half-container">
                     <Maps
                         selectPosition={selectPosition}
                         locations={locations}
                         onMarkerClick={handleMarkerClick}
                     />
                 </div>
-                <div style={{ width: '50vw', height: '100vh' }}>
+                <div className="half-container">
                     <UserProfile />
                     <SearchBox
                         selectPosition={selectPosition}

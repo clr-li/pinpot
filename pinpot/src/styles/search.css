@@ -1,13 +1,10 @@
 .search-box-wrapper {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
     padding-left: 5px;
     padding-right: 5px;
-    width: 100%;
 }
 
 .search-box-container {
+    flex-direction: column;
     display: flex;
     align-items: center;
 }
@@ -15,10 +12,14 @@
 .search-input {
     flex: 1;
     width: calc(100% - 85px);
-    height: 38px; /* Increase this value to make the input taller */
     padding: 10px; /* Add padding to ensure text doesn't touch edges */
     box-sizing: border-box; /* Ensure padding is included in height */
     margin-right: 10px;
+    flex: 1;
+    height: 40px; /* Match the button height */
+    padding: 10px; /* Ensure text doesn't touch edges */
+    border: 1px solid #ddd; /* Add border for consistency */
+    border-radius: 5px; /* Rounded corners for consistency */
 }
 
 .list-item {
@@ -38,15 +39,6 @@
     display: inline;
     align-items: center;
     width: 100%;
-}
-
-.search-input {
-    flex: 1;
-    height: 38px; /* Match the button height */
-    padding: 10px; /* Ensure text doesn't touch edges */
-    box-sizing: border-box; /* Ensure padding is included in height */
-    border: 1px solid #ddd; /* Add border for consistency */
-    border-radius: 5px; /* Rounded corners for consistency */
 }
 
 .search-button {

@@ -1,6 +1,6 @@
 // Filename - explore.js
 import React, { useState, useEffect } from 'react';
-import '../index.css';
+import '../styles/search.css'; // Include any styles you need
 import Navbar from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Maps from '../components/Maps';
@@ -80,14 +80,14 @@ function ExplorePage() {
         <React.StrictMode>
             <Navbar />
             <div className="half-half-containter">
-                <div style={{ width: '50vw', height: '100vh' }}>
+                <div className="half-container">
                     <Maps
                         selectPosition={selectPosition}
                         locations={locations}
                         onMarkerClick={handleMarkerClick}
                     />
                 </div>
-                <div style={{ width: '50vw', height: '100vh' }}>
+                <div className="half-container">
                     <UserProfile />
                     <UserDetails username={userState}></UserDetails>
                     <SearchBox

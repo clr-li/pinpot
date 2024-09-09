@@ -5,7 +5,7 @@
     align-items: center;
     max-width: 500px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -25,9 +25,8 @@
 
 .file-uploader input[type='file'] {
     display: block;
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
     cursor: pointer;
     border: 2px dashed #007bff;
     border-radius: 8px;
@@ -45,11 +44,10 @@
     border-color: #0056b3;
 }
 
-.file-uploader button {
+.save-image {
     background-color: #007bff;
     color: #ffffff;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.5rem;
     font-weight: 600;
     border: none;
     border-radius: 8px;
@@ -66,7 +64,7 @@
 }
 
 .file-uploader img {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     border-radius: 8px;
     border: 1px solid #e0e0e0;
     max-width: 120px;
@@ -80,8 +78,8 @@
     flex-direction: column;
     align-items: center;
     max-width: 500px;
-    margin: 20px auto;
-    padding: 20px;
+    margin: 15px auto;
+    padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -89,15 +87,13 @@
 }
 
 .post-settings h2 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     color: #333;
     text-align: center;
     font-weight: 600;
-    margin-bottom: 15px;
 }
 
 .post-settings label {
-    font-size: 1rem;
     margin-bottom: 0.5rem;
     color: #333;
     display: block;
@@ -105,20 +101,18 @@
 
 .post-settings textarea {
     width: 100%;
-    padding: 10px;
-    font-size: 1rem;
+    padding: 8px;
     border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 0.5rem;
     box-sizing: border-box;
-    min-height: 100px; /* Ensure a minimum height for the textarea */
+    min-height: 90px; /* Ensure a minimum height for the textarea */
     resize: vertical; /* Allow vertical resizing */
 }
 
 .post-settings input[type='date'] {
     width: 100%;
-    padding: 10px;
-    font-size: 1rem;
+    padding: 8px;
     border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 0.5rem;
@@ -127,8 +121,7 @@
 
 .post-settings select {
     width: 100%;
-    padding: 10px;
-    font-size: 1rem;
+    padding: 8px;
     border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 0.5rem;
@@ -138,8 +131,7 @@
 .post-settings button {
     background-color: #007bff;
     color: #ffffff;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.5rem;
     font-weight: 600;
     border: none;
     border-radius: 8px;
@@ -148,7 +140,6 @@
         background-color 0.3s,
         box-shadow 0.3s;
     width: 100%;
-    margin-top: 0.5rem;
 }
 
 .post-settings button:hover {

@@ -125,10 +125,11 @@ function FileUploader(props) {
     return (
         <div className="file-uploader">
             <h2>Upload Image</h2>
-            <br />
             <input type="file" accept="image/*" onChange={convertToBase64} />
-            {image && <img className="image-preview" src={image} alt="Preview" />}
-            <button onClick={saveImageToState}>Save Image</button>
+            {image && <img src={image} alt="Preview" />}
+            <button class="save-image" onClick={saveImageToState}>
+                Save Image
+            </button>
             {message && <PopupMessage message={message.text} type={message.type} />}
         </div>
     );

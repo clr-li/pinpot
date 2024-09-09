@@ -1,12 +1,11 @@
 .half-half-containter {
     display: flex;
     flex-direction: row;
-    height: 100vh;
+    height: calc(100vh - 56px);
 }
 
 .half-container {
     flex: 1; /* Allow the child divs to take equal space */
-    height: 100%; /* Full height of the container */
     overflow: auto; /* Allow scrolling if needed */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }

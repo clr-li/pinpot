@@ -1,6 +1,5 @@
 // Filename: home.js
 import React, { useState, useEffect } from 'react';
-import '../index.css';
 import Navbar from '../components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SearchBox from '../components/SearchBox';
@@ -42,14 +41,14 @@ function HomePage() {
         <React.StrictMode>
             <Navbar />
             <div className="half-half-containter">
-                <div style={{ width: '50vw', height: '100%' }}>
+                <div className="half-container">
                     <Maps
                         selectPosition={selectPosition}
                         locations={locations}
                         onMarkerClick={handleMarkerClick}
                     />
                 </div>
-                <div style={{ width: '50vw' }}>
+                <div className="half-container">
                     <h1>PinPot Top Posts</h1>
                     <SearchBox
                         selectPosition={selectPosition}

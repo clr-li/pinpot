@@ -1,6 +1,7 @@
 // Filename - Login.js
 import { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
+import '../styles/form.css';
 
 function LoginForm() {
     const userRef = useRef();
@@ -71,6 +72,7 @@ function LoginForm() {
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="username">Username:</label>
                         <input
+                            className="login-input"
                             type="text"
                             id="username"
                             ref={userRef}
@@ -82,6 +84,7 @@ function LoginForm() {
 
                         <label htmlFor="password">Password:</label>
                         <input
+                            className="login-input"
                             type="password"
                             id="password"
                             onChange={e => setPwd(e.target.value)}
