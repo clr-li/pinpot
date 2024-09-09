@@ -184,10 +184,6 @@ app.get('/search-users', async (req, res) => {
 app.post('/follow-user', async (req, res) => {
     const { followedId, followerId } = req.body;
 
-    if (!followerId || !followedId) {
-        return res.status(400).send({ Status: 'error', data: 'User IDs are required.' });
-    }
-
     try {
         // Check if the user is already following the target user
         const existingRelation = await followCol.findOne({ followerId, followedId: followedId });
@@ -200,7 +196,28 @@ app.post('/follow-user', async (req, res) => {
         const newRelation = new followCol({ followerId, followedId: followedId });
         await newRelation.save();
 
-        res.status(201).send({ Status: 'success', data: 'User followed successfully' });
+        res.status(201).send({ Status: 'success', data: 'Followed successfully!' });
+    } catch (e) {
+        res.send({ Status: 'error', data: e.message });
+    }
+});
+
+// Unfollow user
+app.post('/unfollow-user', async (req, res) => {
+    const { followedId, followerId } = req.body;
+
+    try {
+        // Check if the user is currently following the target user
+        const existingRelation = await followCol.findOne({ followerId, followedId });
+
+        if (!existingRelation) {
+            return res.send({ Status: 'error', data: 'Not following this user' });
+        }
+
+        // Remove the follow relationship
+        await followCol.deleteOne({ _id: existingRelation._id });
+
+        res.status(201).send({ Status: 'success', data: 'User unfollowed successfully' });
     } catch (e) {
         res.send({ Status: 'error', data: e.message });
     }
@@ -291,9 +308,9 @@ app.get('/top-posts', async (req, res) => {
 
 // Get all top posts by location
 app.get('/top-posts-by-loc', async (req, res) => {
-    try {
-        const { lat, lon } = req.query;
+    const { lat, lon } = req.query;
 
+    try {
         const posts = await postsCol.find({
             visibility: 'public', // TODO: use enum
             'location.lat': lat,
@@ -302,6 +319,21 @@ app.get('/top-posts-by-loc', async (req, res) => {
         });
 
         res.status(200).send({ Status: 'success', data: posts });
+    } catch (e) {
+        res.status(500).send({ Status: 'error', data: e.message });
+    }
+});
+
+// Get number of followers
+app.get('/follower-count', async (req, res) => {
+    const { uid } = req.query;
+
+    try {
+        const followers = await followCol.find({
+            followedId: uid,
+        });
+
+        res.status(200).send({ Status: 'success', data: followers });
     } catch (e) {
         res.status(500).send({ Status: 'error', data: e.message });
     }

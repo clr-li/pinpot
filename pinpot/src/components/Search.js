@@ -59,12 +59,33 @@ function Search() {
 
             if (res.status === 201) {
                 setMessage({ text: 'Followed successfully!', type: 'success' });
+                // Update the follower count in search results
+                updateFollowerCount(followedId, 1);
             } else {
-                setMessage({ text: res.data.data, type: 'error' });
+                const unfollowRes = await axios.post('http://localhost:8000/unfollow-user', {
+                    followerId: user.id,
+                    followedId,
+                });
+                if (unfollowRes.status == 201) {
+                    setMessage({ text: 'Unfollowed successfully!', type: 'success' });
+                    updateFollowerCount(followedId, -1);
+                } else {
+                    setMessage({ text: unfollowRes.data.data, type: 'error' });
+                }
             }
         } catch (error) {
             setMessage({ text: 'Error following user', type: 'error' });
         }
+    };
+
+    const updateFollowerCount = (userId, increment) => {
+        setSearchResults(prevResults =>
+            prevResults.map(user =>
+                user._id === userId
+                    ? { ...user, followerCount: user.followerCount + increment }
+                    : user,
+            ),
+        );
     };
 
     return (
@@ -85,7 +106,11 @@ function Search() {
                 </form>
             </div>
             {message && <div className={`message ${message.type}`}>{message.text}</div>}
-            <SearchResults searchResults={searchResults} handleFollowUser={handleFollowUser} />
+            <SearchResults
+                searchResults={searchResults}
+                handleFollowUser={handleFollowUser}
+                updateFollowerCount={updateFollowerCount}
+            />
         </div>
     );
 }
